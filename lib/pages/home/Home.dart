@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../stores/CalendarStore.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -8,16 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var list = ['2022.10', '2022.11', '2022.12', '2023.01'];
-
-  var YYYYMM = '2022.11';
-
-  setYearMonth(value) {
-    setState(() {
-      print(value);
-      YYYYMM = value;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +47,16 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.calendar_month_rounded),
           ),
         ],
-        title: DropdownButton<String?>(
+        title: DropdownButton<String>(
           style: TextStyle(color: Colors.white),
-          items: list.map<DropdownMenuItem<String?>>((String? i) {
-            return DropdownMenuItem<String?>(
-              value: i,
-              child: Text(i.toString()),
+          items: context.watch<CalendarStore>().yearMonthList.map<DropdownMenuItem<String>>((String item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Text(item),
             );
           }).toList(),
-          value: YYYYMM,
-          onChanged: (value) => setYearMonth(value),
+          value: context.watch<CalendarStore>().selectedYearMonth,
+          onChanged: (value) => context.read<CalendarStore>().setYearMonth(value),
         ),
         backgroundColor: Colors.black,
       ),
