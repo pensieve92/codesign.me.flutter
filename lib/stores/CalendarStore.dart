@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CalendarStore extends ChangeNotifier {
-  var yearMonthList = ['2022.11', '2022.12', '2023.01', '2023.02'];
   var selectedYearMonth;
 
   //현재 연월로 초기화

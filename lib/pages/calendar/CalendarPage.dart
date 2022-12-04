@@ -28,6 +28,20 @@ class _CalendarPageState extends State<CalendarPage> {
         },
         icon: Icon(Icons.menu_rounded),
       ),
+      title: ElevatedButton(
+        onPressed: (){
+          print('show modal');
+        },
+        style: ElevatedButton.styleFrom(
+          fixedSize: Size(130, 45),
+          backgroundColor: Colors.black,
+          textStyle: TextStyle(fontSize: 20),
+          padding: EdgeInsets.only(left: 0),
+        ),
+        child: Row(
+          children: [Text(context.watch<CalendarStore>().selectedYearMonth), Icon(Icons.arrow_drop_down)],
+        ),
+      ),
       actions: [
         TextButton(
             child: Row(
@@ -50,17 +64,6 @@ class _CalendarPageState extends State<CalendarPage> {
           icon: Icon(Icons.calendar_month_rounded),
         ),
       ],
-      title: DropdownButton<String>( // TODO Calendar Popup띄우기
-        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-        items: context.watch<CalendarStore>().yearMonthList.map<DropdownMenuItem<String>>((String item) {
-          return DropdownMenuItem<String>(
-            value: item,
-            child: Text(item),
-          );
-        }).toList(),
-        value: context.watch<CalendarStore>().selectedYearMonth,
-        onChanged: (value) => context.read<CalendarStore>().setYearMonth(value),
-      ),
       backgroundColor: Colors.black,
     );
   }
