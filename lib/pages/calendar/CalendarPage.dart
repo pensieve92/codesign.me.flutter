@@ -3,14 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../../stores/CalendarStore.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class CalendarPage extends StatefulWidget {
+  const CalendarPage({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _HomeState extends State<Home> {
+class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,6 @@ class _HomeState extends State<Home> {
         icon: Icon(Icons.menu_rounded),
       ),
       actions: [
-
         TextButton(
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
