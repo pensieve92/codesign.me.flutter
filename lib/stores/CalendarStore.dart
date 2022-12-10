@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:me/services/calendar/model/Weekday.dart';
+
+import '../services/calendar/model/Day.dart';
 
 class CalendarStore extends ChangeNotifier {
-  var selectedYearMonth;
+  String selectedYearMonth;
+  List<Day> selectedMonthCalendar;
 
   //현재 연월로 초기화
-  CalendarStore(): selectedYearMonth = [DateTime.now().year, DateTime.now().month].join('.') ;
+  CalendarStore(): selectedYearMonth = '', selectedMonthCalendar =[] {
+    this.selectedYearMonth = [DateTime.now().year, DateTime.now().month].join('.');
+    this.selectedMonthCalendar = makeCalendar(DateTime.now().year, DateTime.now().month);
+  }
 
-  setYearMonth(String? value) {
+  setYearMonth(String value) {
     selectedYearMonth = value;
     notifyListeners();
   }
@@ -17,29 +24,33 @@ class CalendarStore extends ChangeNotifier {
   }
 
   setDay(int year, int month, int day){
+    // AppBar 상단에 선택된 년월
     selectedYearMonth = [year, month].join('.');
-    String weekday = getWeekday(year, month, day, null);
-    notifyListeners();
 
-    print('setDay $selectedYearMonth$day : $weekday');
+    // 달력 만들기
+    makeCalendar(year, month);
+
+    // 상태값 감시
+    notifyListeners();
   }
 
+  List<Day> makeCalendar(int year, int month){
+    List<Day> calendar = [];
+    DateTime firstDay = DateTime(year, month, 1);
+    int startWeekDay = firstDay.weekday;
 
-  /**
-   * 요일 조회
-   */
-  getWeekday(int year, int month, int day, String? language){
-    return weekday[DateTime(year, month, day).weekday]![language ?? 'ko'] ?? 'Error';
+    for(var day=0; day < 42; day++){
+      // 첫번째주이고, 시작하는 요일이 startWeekDay인가?
+      if(day < 7 && startWeekDay == day){
+        calendar.add(Day(firstDay));
+      }else{
+        DateTime anotherDay = DateTime(year, month, 1).add(Duration(days: day - startWeekDay));
+        calendar.add(Day(anotherDay));
+      }
+    }
+
+    return calendar;
   }
 
 }
 
-const weekday = {
-  1: {'en': 'monday', 'ko': '월요일'},
-  2: {'en': 'tuesday', 'ko': '화요일'},
-  3: {'en': 'wednesday', 'ko': '수일'},
-  4: {'en': 'thursday', 'ko': '목요일'},
-  5: {'en': 'friday', 'ko': '금요일'},
-  6: {'en': 'saturday', 'ko': '토요일'},
-  7: {'en': 'sunday', 'ko': '월요일'},
-};
