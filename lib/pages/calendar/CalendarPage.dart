@@ -99,11 +99,17 @@ class _CalendarPageState extends State<CalendarPage> {
               return Container(
                 alignment: Alignment.center,
                 color: Colors.black,
-                child: Opacity(
-                  opacity: days[index].isCurMonth ? 1.0 : 0.5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: DayWidget(days, index),
+                child: GestureDetector(
+                  onTap: () => context.read<CalendarStore>().setSelectedDay(index),
+                  child: Opacity(
+                    opacity: days[index].isCurMonth ? 1.0 : 0.5,
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: DayWidget(context, days, index),
+                      ),
+                      decoration: setSelectedDayStyle(index),
+                    ),
                   ),
                 ),
               );
@@ -124,6 +130,27 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ],
     );
+  }
+
+  /**
+   * 선택된 Day 표시
+   */
+  BoxDecoration setSelectedDayStyle(int index) {
+    int selectedDay = context.watch<CalendarStore>().selectedDay;
+    if(selectedDay == index) {
+      return BoxDecoration(
+          color: Colors.black,
+          border: Border.all(
+            color: Colors.white,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.all(
+              Radius.circular(10.0)
+          )
+      );
+    }else{
+      return BoxDecoration();
+    }
   }
 
 

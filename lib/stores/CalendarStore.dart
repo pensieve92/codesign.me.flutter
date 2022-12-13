@@ -5,10 +5,13 @@ import '../services/calendar/model/Day.dart';
 
 class CalendarStore extends ChangeNotifier {
   String selectedYearMonth;
+  int selectedDay;
   List<Day> selectedMonthCalendar;
 
+
   //현재 연월로 초기화
-  CalendarStore(): selectedYearMonth = '', selectedMonthCalendar =[] {
+  CalendarStore(): selectedYearMonth = '', selectedDay = 0, selectedMonthCalendar =[] {
+    this.selectedDay = DateTime.now().weekday == 7 ? 0 : DateTime.now().weekday;
     this.selectedYearMonth = [DateTime.now().year, DateTime.now().month].join('.');
     this.selectedMonthCalendar = makeCalendar(DateTime.now().year, DateTime.now().month);
   }
@@ -29,6 +32,13 @@ class CalendarStore extends ChangeNotifier {
 
     // 달력 만들기
     makeCalendar(year, month);
+
+    // 상태값 감시
+    notifyListeners();
+  }
+
+  setSelectedDay(int index){
+    this.selectedDay = index;
 
     // 상태값 감시
     notifyListeners();

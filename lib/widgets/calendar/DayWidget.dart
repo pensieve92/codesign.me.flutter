@@ -5,10 +5,10 @@ import 'package:me/widgets/calendar/DayTodoWidget.dart';
 import 'package:me/widgets/calendar/DayScheduleWidget.dart';
 
 
-List<Widget> DayWidget(List<Day> days, int index) {
+List<Widget> DayWidget(BuildContext context, List<Day> days, int index) {
   return [
     // Header - 요일
-    DayHeaderWidget(days, index),
+    DayHeaderWidget(context, days, index),
 
     // Body & Footer
     Expanded(
@@ -22,14 +22,7 @@ List<Widget> DayWidget(List<Day> days, int index) {
                     children: [
                       // 일정
                       DayScheduleWidget(),
-                      DayScheduleWidget(),
-                      DayScheduleWidget(),
-                      DayScheduleWidget(),
                       // TODOList
-                      DayTodoWidget(),
-                      DayTodoWidget(),
-                      DayTodoWidget(),
-                      DayTodoWidget(),
                       DayTodoWidget(),
                     ],
                   ),
