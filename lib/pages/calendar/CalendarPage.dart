@@ -4,6 +4,7 @@ import 'package:me/services/calendar/model/Weekday.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
 import 'package:me/widgets/calendar/DayWidget.dart';
+import 'package:me/utils/commonUtil.dart';
 
 import '../../stores/CalendarStore.dart';
 
@@ -17,6 +18,7 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   var gridCellRatio = 1 / 2; // 가로 제로 비율
   final ScrollController _scrollController = ScrollController();
+  final _docContentEditController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,12 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
+  @override
+  void dispose() {
+    _docContentEditController.dispose();
+    super.dispose();
+  }
+
   /**
    * 캘린더 - 하단 검색바
    */
@@ -34,27 +42,46 @@ class _CalendarPageState extends State<CalendarPage> {
     return Row(
       children: [
         Flexible(
-            child: TextField(
-                // TODO
-                // 커서가 올라가면 borderRadius가 적용이 안된다.
-                // 커서올라같을때 시타일 지정하는게 있는지 찾아보기
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.blue.shade100,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(
-                          color: Colors.green,
-                          width: 1.0,
-                        ))))),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-          ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-          onPressed: () {},
-          child: Icon(Icons.add),
+          child: TextField(
+            // TODO
+            // 커서가 올라가면 borderRadius가 적용이 안된다.
+            // 커서올라같을때 시타일 지정하는게 있는지 찾아보기
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.blue.shade100,
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 1.0,
+                    ))),
+            controller: _docContentEditController,
+          ),
         ),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor:
+                  Theme.of(context).colorScheme.onSecondaryContainer,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+            onPressed: () {},
+            // 키보드 활성 여부에 따라 버튼 아이콘 변경
+            child: gf_isShowKeyboard(context)
+                ? IconButton(
+                    icon: Icon(Icons.check),
+                    onPressed: () {
+                      print('click check butotn ');
+                      // saveDoc DocType >>  일정, 메모, , todo, note post
+                      context.read<CalendarStore>().saveDoc(_docContentEditController.text);
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      // TODO 상세 입력폼 나오게 분리하기
+                      print('click add butotn ');
+                    },
+                  )),
       ],
     );
   }
@@ -100,7 +127,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 alignment: Alignment.center,
                 color: Colors.black,
                 child: GestureDetector(
-                  onTap: () => context.read<CalendarStore>().setSelectedDay(index),
+                  onTap: () =>
+                      context.read<CalendarStore>().setSelectedDay(index),
                   child: Opacity(
                     opacity: days[index].isCurMonth ? 1.0 : 0.5,
                     child: Container(
@@ -114,7 +142,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
               );
             },
-            childCount: 7,// TODO 42로 다시 변경해야함
+            childCount: 35, // TODO 42로 다시 변경해야함
           ),
         ),
 
@@ -137,23 +165,18 @@ class _CalendarPageState extends State<CalendarPage> {
    */
   BoxDecoration setSelectedDayStyle(int index) {
     int selectedDay = context.watch<CalendarStore>().selectedDay;
-    if(selectedDay == index) {
+    if (selectedDay == index) {
       return BoxDecoration(
           color: Colors.black,
           border: Border.all(
             color: Colors.white,
             width: 2.0,
           ),
-          borderRadius: BorderRadius.all(
-              Radius.circular(10.0)
-          )
-      );
-    }else{
+          borderRadius: BorderRadius.all(Radius.circular(10.0)));
+    } else {
       return BoxDecoration();
     }
   }
-
-
 
   /**
    * 캘린더 - 상단 AppBar
