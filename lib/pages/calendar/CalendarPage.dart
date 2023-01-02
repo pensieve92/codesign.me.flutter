@@ -20,11 +20,22 @@ class _CalendarPageState extends State<CalendarPage> {
   final ScrollController _scrollController = ScrollController();
   final _docContentEditController = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: baseCalendarAppBar(context),
-      body: baseCalendarBody(context),
+      body: FutureBuilder(
+        future: context.watch<CalendarStore>().selectedMonthCalendar,
+        builder: (BuildContext context, AsyncSnapshot<List<Day>> snapshot) {
+          return baseCalendarBody(context, snapshot);
+        },),
       bottomSheet: baseCalendarBottomSheet(context),
     );
   }
@@ -61,33 +72,40 @@ class _CalendarPageState extends State<CalendarPage> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor:
-                  Theme.of(context).colorScheme.onSecondaryContainer,
-              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+              Theme
+                  .of(context)
+                  .colorScheme
+                  .onSecondaryContainer,
+              backgroundColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .secondaryContainer,
             ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
             onPressed: () {},
             // 키보드 활성 여부에 따라 버튼 아이콘 변경
             child: gf_isShowKeyboard(context)
                 ? IconButton(
-                    icon: Icon(Icons.check),
-                    onPressed: () {
-                      print('click check butotn ');
-                      // saveDoc DocType >>  일정, 메모, , todo, note post
-                      context.read<CalendarStore>().saveDoc(_docContentEditController.text);
-                    },
-                  )
+              icon: Icon(Icons.check),
+              onPressed: () {
+                print('click check butotn ');
+                // saveDoc DocType >>  일정, 메모, , todo, note post
+                context.read<CalendarStore>().saveDoc(
+                    _docContentEditController.text);
+              },
+            )
                 : IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      // TODO 상세 입력폼 나오게 분리하기
-                      print('click add butotn ');
-                    },
-                  )),
+              icon: Icon(Icons.add),
+              onPressed: () {
+                // TODO 상세 입력폼 나오게 분리하기
+                print('click add butotn ');
+              },
+            )),
       ],
     );
   }
 
-  CustomScrollView baseCalendarBody(BuildContext context) {
-    var days = context.watch<CalendarStore>().selectedMonthCalendar;
+  CustomScrollView baseCalendarBody(BuildContext context, AsyncSnapshot<List<Day>> snapshot) {
+    var days = snapshot.data;
 
     return CustomScrollView(
       // controller: _scrollController,
@@ -98,10 +116,10 @@ class _CalendarPageState extends State<CalendarPage> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7, // 1개의 행에 보여줄 item개수
             childAspectRatio:
-                2.5 / 1, // item의 가로세로비율 가로/세로 // 이거를 스크롤 될때 줄이거나 늘리거나 해야됨! //
+            2.5 / 1, // item의 가로세로비율 가로/세로 // 이거를 스크롤 될때 줄이거나 늘리거나 해야됨!
           ),
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
+                (BuildContext context, int index) {
               return Container(
                 height: 100,
                 alignment: Alignment.center,
@@ -121,7 +139,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 1 / 2, // item의 가로세로비율 가로1: 세로2 // 이거를 스크롤 될때 줄이거나 늘리거나 해야됨! //
           ),
           delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
+                (BuildContext context, int index) {
               // DayWidget
               return Container(
                 alignment: Alignment.center,
@@ -130,11 +148,11 @@ class _CalendarPageState extends State<CalendarPage> {
                   onTap: () =>
                       context.read<CalendarStore>().setSelectedDay(index),
                   child: Opacity(
-                    opacity: days[index].isCurMonth ? 1.0 : 0.5,
+                    opacity: days![index].isCurMonth ? 1.0 : 0.5,
                     child: Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: DayWidget(context, days, index),
+                        children: DayWidget(context, days!, index),
                       ),
                       decoration: setSelectedDayStyle(index),
                     ),
@@ -142,7 +160,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 ),
               );
             },
-            childCount: 35, // TODO 42로 다시 변경해야함
+            childCount: 42, // TODO 42로 다시 변경해야함
           ),
         ),
 
@@ -164,7 +182,9 @@ class _CalendarPageState extends State<CalendarPage> {
    * 선택된 Day 표시
    */
   BoxDecoration setSelectedDayStyle(int index) {
-    int selectedDay = context.watch<CalendarStore>().selectedDay;
+    int selectedDay = context
+        .watch<CalendarStore>()
+        .selectedDay;
     if (selectedDay == index) {
       return BoxDecoration(
           color: Colors.black,
@@ -201,7 +221,9 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         child: Row(
           children: [
-            Text(context.watch<CalendarStore>().selectedYearMonth),
+            Text(context
+                .watch<CalendarStore>()
+                .selectedYearMonth),
             Icon(Icons.arrow_drop_down)
           ],
         ),
