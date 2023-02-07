@@ -162,12 +162,22 @@ class CalendarStore extends ChangeNotifier {
   /// ex >>> 202212 : [20221201, 20221208]
   /// 날짜 : [docId, ...]
   /// ex >>> 20221201 : [20221201-TODO-2022_12_01_14_02_22, ]
-  void saveParentKey(
-      SharedPreferences storage, String yearMonthDay, String docId) {
-    bool hasDay = storage.containsKey(yearMonthDay);
-    List<String> docs = [];
-    docs = (hasDay ? storage.getStringList(yearMonthDay) : [])!;
-    docs.add(docId);
-    storage.setStringList(yearMonthDay, docs);
+  void saveParentKey(SharedPreferences storage, String parentKey, String childKey) {
+    bool hasKey = storage.containsKey(parentKey);
+    List<String> childKeys = storage.getStringList(parentKey) ?? [];
+
+    if(hasKey){ // 키가 존재할 경우
+      // child키가 중복으로 존재하는지
+      bool dupChildKey = childKeys.contains(childKey);
+      if(!dupChildKey){// child 키가 중복이 아닐 경우
+        // 기존에 배열에 add후 저장하기
+        childKeys.add(childKey);
+        storage.setStringList(parentKey, childKeys);
+      }
+    }else{ // 키가 존재하지 않을 경우
+      // 빈 배열에 add후 저장
+      childKeys.add(childKey);
+      storage.setStringList(parentKey, childKeys);
+    }
   }
 }
