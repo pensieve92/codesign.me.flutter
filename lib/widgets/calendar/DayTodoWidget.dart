@@ -6,7 +6,7 @@ Row DayTodoWidget() {
       Expanded(
           child: Container(
             color: Colors.amber,
-            child: Text('TODO 1\nTODO 2', style: TextStyle(color: Colors.white)),
+            child: Text('TODO 1\nTODO 2', style: TextStyle(color: Colors.white, fontSize: 8.0)),
           )
       )
     ],

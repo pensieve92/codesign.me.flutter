@@ -33,12 +33,12 @@ List<Widget> DayWidget(BuildContext context, List<Day> days, int index) {
           // Footer - 이모지
           Positioned(
             bottom: 0,
-            child: Icon(Icons.add, color: Colors.red, size: 50)
+            child: Icon(Icons.add, color: Colors.red, size: 25)
           ),
           Positioned(
               bottom: 0,
               right: 0,
-              child: Icon(Icons.add, color: Colors.red, size: 50)
+              child: Icon(Icons.add, color: Colors.red, size: 25)
           ),
         ],
       ),

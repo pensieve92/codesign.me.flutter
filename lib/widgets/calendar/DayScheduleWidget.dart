@@ -14,7 +14,8 @@ Row DayScheduleWidget() {
       ),
       Expanded(
         child: Text('일정 6시 천혁 수원역',
-            style: TextStyle(color: Colors.white)),
+            style: TextStyle(color: Colors.white, fontSize: 8.0),
+        ),
       ),
     ],
   );
