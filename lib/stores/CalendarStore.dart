@@ -11,7 +11,8 @@ class CalendarStore extends ChangeNotifier {
   String selectedYearMonth =
       [DateTime.now().year, DateTime.now().month].join('.');
   int selectedDay = DateTime.now().weekday == 7 ? 0 : DateTime.now().weekday;
-  late Future<List<Day>> selectedMonthCalendar = Future(() => [Day(DateTime.now())]);
+  // late Future<List<Day>> selectedMonthCalendar = Future(() => [Day(DateTime.now())]);
+  late Future<List<Day>> selectedMonthCalendar = makeCalendar();
 
   /// 캘린더
   /// 연, 월 선택
@@ -118,16 +119,10 @@ class CalendarStore extends ChangeNotifier {
     // 생성일 Formating
     var nowDate = DateFormat('yyyy_MM_dd_HH_mm_ss').format(DateTime.now());
 
-    late var year = '';
-    late var month = '';
-    late var day = '';
-
-    selectedMonthCalendar
-        .then((value) => year = value[selectedDay].year.toString());
-    selectedMonthCalendar
-        .then((value) => month = value[selectedDay].month.toString());
-    selectedMonthCalendar
-        .then((value) => day = value[selectedDay].day.toString());
+    var currentCalendar = await selectedMonthCalendar;
+    var year = currentCalendar[selectedDay].year.toString();
+    var month = currentCalendar[selectedDay].month.toString().padLeft(2, '0');
+    var day = currentCalendar[selectedDay].day.toString().padLeft(2, '0');
 
     var yearMonth = year + month;
     var yearMonthDay = year + month + day;
@@ -141,7 +136,6 @@ class CalendarStore extends ChangeNotifier {
 
     // monthKey 저장
     saveParentKey(storage, yearMonth, yearMonthDay);
-
     // DayKey 저장
     saveParentKey(storage, yearMonthDay, document.docId);
 
@@ -156,7 +150,8 @@ class CalendarStore extends ChangeNotifier {
       print("key: $element");
       var value = storage.get(element);
       print(value.toString());
-      storage.remove(element);
+      // 제거
+      // storage.remove(element);
     });
   }
 

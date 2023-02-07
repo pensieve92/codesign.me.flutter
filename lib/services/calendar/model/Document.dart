@@ -7,7 +7,7 @@ class Document {
   late String docDate = ''; // 해당날짜
   late String docType = ''; // 타입
   late String docContent = ''; // 내용
-  late Color docColor = Colors.orangeAccent; // highlight 색깔
+  late String docColor = 'orangeAccent'; // highlight 색깔
 
   late String docFstEmoji = ''; // 이모지1
   late String docScdEmoji = ''; // 이모지2
@@ -53,7 +53,7 @@ class Document {
         docDate = json['docDate'] ?? '',
         docType = json['docType'] ?? '',
         docContent = json['docContent'] ?? '',
-        docColor = json['docColor'] ?? Colors.orangeAccent,
+        docColor = json['docColor'] ?? 'orangeAccent',
         docFstEmoji = json['docFstEmoji'] ?? '',
         docScdEmoji = json['docScdEmoji'] ?? '',
         conditionColor = json['conditionColor'] ?? '',
