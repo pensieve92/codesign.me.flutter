@@ -18,6 +18,7 @@ class Day {
     this.day = dateTime.day;
     this.weekday = Weekday(dateTime.weekday);
     this.isCurMonth = DateTime.now().month == dateTime.month;
+    this.docs = [];
   }
 
   getYearMonthDayToString(){
@@ -26,7 +27,7 @@ class Day {
 
   setDocs(Map<dynamic, dynamic> dayList) {
     var docs = dayList[getYearMonthDayToString()];
-    if(docs != null) this.docs = [...docs];
+    this.docs = docs != null ? [...docs] : [];
   }
 }
 

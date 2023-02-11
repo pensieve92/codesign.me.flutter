@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:me/services/calendar/model/Day.dart';
+import 'package:me/services/calendar/model/Document.dart';
 import 'package:me/widgets/calendar/DayHeaderWidget.dart';
 import 'package:me/widgets/calendar/DayTodoWidget.dart';
 import 'package:me/widgets/calendar/DayScheduleWidget.dart';
 
-
-List<Widget> DayWidget(BuildContext context, List<Day> days, int index) {
+List<Widget> DayWidget(BuildContext context, Day day, int index) {
+  // print('DayWidget days : $day');
   return [
     // Header - 요일
-    DayHeaderWidget(context, days, index),
-
+    DayHeaderWidget(context, day, index),
     // Body & Footer
     Expanded(
       child: Stack(
@@ -17,19 +17,11 @@ List<Widget> DayWidget(BuildContext context, List<Day> days, int index) {
           // Body - 일정 & TODO리스트
           Column(
             children: [
-                 Container(
-                  child: Column(
-                    children: [
-                      // 일정
-                      DayScheduleWidget(),
-                      // TODOList
-                      DayTodoWidget(),
-                    ],
-                  ),
-                ),
+                 Column(
+                   children: day.docs.isNotEmpty ? createDocs(day.docs) : [Row()],
+                 ),
             ],
           ),
-
           // Footer - 이모지
           Positioned(
             bottom: 0,
@@ -45,4 +37,17 @@ List<Widget> DayWidget(BuildContext context, List<Day> days, int index) {
     ),
   ];
 }
+
+List<Widget> createDocs(List<Document> docs){
+  List<Widget> list = [];
+  for(var doc in docs){
+    if (doc.docType == "TODO") {
+      list.add(DayTodoWidget(doc));
+    }else {
+      list.add(DayScheduleWidget());
+    }
+  }
+  return list;
+}
+
 
