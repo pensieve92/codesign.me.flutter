@@ -8,8 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/calendar/model/Day.dart';
 
 class CalendarStore extends ChangeNotifier {
-  String selectedYearMonth =
-      [DateTime.now().year, DateTime.now().month].join('.');
+  String selectedYearMonth = DateTime.now().year.toString() +  DateTime.now().month.toString().padLeft(2, '0');
   int selectedDay = DateTime.now().weekday == 7 ? 0 : DateTime.now().weekday;
   // late Future<List<Day>> selectedMonthCalendar = Future(() => [Day(DateTime.now())]);
   late Future<List<Day>> selectedMonthCalendar = makeCalendar();
@@ -32,7 +31,9 @@ class CalendarStore extends ChangeNotifier {
   /// 날짜 선택
   setDay(int year, int month, int day) {
     // AppBar 상단에 선택된 년월
-    selectedYearMonth = [year, month].join('.');
+    // selectedYearMonth = [year, month].join('.');
+    selectedYearMonth = year.toString() + month.toString().padLeft(2, '0');
+    notifyListeners();
 
     // 달력 만들기
     makeCalendar(year: year, month: month);
@@ -67,43 +68,56 @@ class CalendarStore extends ChangeNotifier {
     DateTime firstDay = DateTime(year, month, 1);
     int startWeekDay = firstDay.weekday;
 
-    // TODO Day객체에 List<Document> 넣어주기
-    var docsOfMonth = [];
+    // Docs 있는 Days 가져오기
+    var dayList = getDaysAddedDocsTreeMonth(year, month, storage);
 
-    // TODO 얘를 한번 가져오고 + 전월, 다음월것도 가져온다음에 합치기
-    // 이전, 다음 월 추출하기
-    var prevYearMonth =
-        DateFormat('yyyyMM').format(DateTime(year, month - 1, 1));
-    var nextYearMonth =
-        DateFormat('yyyyMM').format(DateTime(year, month + 1, 1));
-
-    var daysOfMonth = storage.getStringList(selectedYearMonth);
-    var daysOfPrevMonth = storage.getStringList(prevYearMonth);
-    var daysOfNextMonth = storage.getStringList(nextYearMonth);
-
-    // for (var day in daysOfMonth!) {
-    //
-    //   var docsOfDay = storage.getStringList(day);
-    //   for (var doc in docsOfDay!) {
-    //     //TODO 이부분은 아래 for문에서 추가해주자
-    //     docsOfMonth.add(Document.fromJson(jsonDecode(storage.getString(doc)!)));
-    //   }
-    // }
-    // print('docsOfMonth: $docsOfMonth');
-
+    // 캘린더 생성 + Doc 추가
     for (var day = 0; day < 42; day++) {
       // 첫번째주이고, 시작하는 요일이 startWeekDay인가?
       if (day < 7 && startWeekDay == day) {
-        newCalendar.add(Day(firstDay));
+        var initDay = Day(firstDay);
+        initDay.setDocs(dayList);
+        newCalendar.add(initDay);
       } else {
-        DateTime anotherDay =
-            DateTime(year, month, 1).add(Duration(days: day - startWeekDay));
-        newCalendar.add(Day(anotherDay));
+        DateTime anotherDay = DateTime(year, month, 1).add(Duration(days: day - startWeekDay));
+        var initDay = Day(anotherDay);
+        initDay.setDocs(dayList);
+        newCalendar.add(initDay);
       }
     }
     print("calendar: $newCalendar");
+    // print(newCalendar[12].docs);
+    // print(newCalendar[12].docs[0].docDate);
     // selectedMonthCalendar = newCalendar as Future<List<Day>>;
     return newCalendar;
+  }
+
+  /// 캘린더
+  /// 전월, 현재월, 다음월에 Docs 가져오기
+  Map getDaysAddedDocsTreeMonth(int year, int month, SharedPreferences storage) {
+    var days = {};
+    var prevYearMonth = DateFormat('yyyyMM').format(DateTime(year, month - 1, 1));
+    var nextYearMonth = DateFormat('yyyyMM').format(DateTime(year, month + 1, 1));
+
+    var docDaysOfCurrentMonth = storage.getStringList(selectedYearMonth) ?? [];
+    var docDaysOfPrevMonth = storage.getStringList(prevYearMonth) ?? [];
+    var docDaysOfNextMonth = storage.getStringList(nextYearMonth) ?? [];
+    var dayKeys = [...docDaysOfPrevMonth , ...docDaysOfCurrentMonth,  ...docDaysOfNextMonth];
+
+    if(dayKeys.isNotEmpty){
+      for (var dayKey in dayKeys) {// docsKey 조회
+        var docKeys = storage.getStringList(dayKey) ?? [];
+        if(docKeys.isNotEmpty){ // docs 조회
+          var docList = [];
+          for (var docKey in docKeys) {
+            var doc = storage.getString(docKey) ?? '';
+            if(doc.isNotEmpty) docList.add(Document.fromJson(jsonDecode(doc)));
+          }
+          days[dayKey] = docList;
+        }
+      }
+    }
+    return days;
   }
 
   // TODO Parameter 수정될 듯!
@@ -153,6 +167,8 @@ class CalendarStore extends ChangeNotifier {
       // 제거
       // storage.remove(element);
     });
+
+    makeCalendar();
   }
 
   /// 캘린더

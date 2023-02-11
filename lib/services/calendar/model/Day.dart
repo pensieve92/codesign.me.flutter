@@ -19,6 +19,15 @@ class Day {
     this.weekday = Weekday(dateTime.weekday);
     this.isCurMonth = DateTime.now().month == dateTime.month;
   }
+
+  getYearMonthDayToString(){
+    return year.toString() + month.toString().padLeft(2, '0') + day.toString().padLeft(2, '0');
+  }
+
+  setDocs(Map<dynamic, dynamic> dayList) {
+    var docs = dayList[getYearMonthDayToString()];
+    if(docs != null) this.docs = [...docs];
+  }
 }
 
 
