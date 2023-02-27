@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:me/services/calendar/model/DocType.dart';
 
-class Document {
+class DocumentModel {
   late String docId = ''; // ID : docDate-docType-createDate
   late String docDate = ''; // 해당날짜
   late String docType = ''; // 타입
@@ -21,14 +21,14 @@ class Document {
   late String updateDate = ''; // 수정일자
 
   // Doc 기본 생성자 (docType별로 createTodo... 만들거라 생략함)
-  Document({
+  DocumentModel({
     required this.docDate,
     required this.docContent,
     required this.createDate,
   });
 
   // DocType-TODO Doc 생성
-  Document.createTodo({
+  DocumentModel.createTodo({
     required this.docDate,
     required this.docContent,
     required this.createDate,
@@ -48,7 +48,7 @@ class Document {
   // }) : docId = '$docDate-$this.docType-${createDate}' ;
 
   // Json to Document
-  Document.fromJson(Map<String, dynamic> json)
+  DocumentModel.fromJson(Map<String, dynamic> json)
       : docId = json['docId'] ?? '',
         docDate = json['docDate'] ?? '',
         docType = json['docType'] ?? '',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:me/services/calendar/model/Document.dart';
+import 'package:me/services/calendar/model/DocumentModel.dart';
 
-Row DayTodoWidget(Document doc) {
+Row DayTodoWidget(DocumentModel doc) {
 
   // print('day.docs : ${doc}');
   // print('day.docs : ${doc.docId}');

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:me/services/calendar/model/Day.dart';
+import 'package:me/services/calendar/model/DayModel.dart';
 import 'package:me/stores/CalendarStore.dart';
 import 'package:provider/provider.dart';
 
-Row DayHeaderWidget(BuildContext context, Day day, int index) {
+Row DayHeaderWidget(BuildContext context, DayModel day, int index) {
   var today = DateTime.now().day;
   bool isToday = day.isCurMonth && day.day == today;
 

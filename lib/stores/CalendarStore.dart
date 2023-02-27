@@ -1,17 +1,78 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:me/services/calendar/model/Document.dart';
+import 'package:me/services/calendar/model/DocumentModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../services/calendar/model/Day.dart';
+import '../services/calendar/model/DayModel.dart';
 
+// TODO Store를 sigleton으로 관리하는 방법
+// 사용할 변수를 late로 선언한다.
+// store의 역할이 멀까? >> 변수를 가지고 있다.
+// 화면과 데이터 분리 할 수 있다.
+// TODO 새로 만들고 싶다..
 class CalendarStore extends ChangeNotifier {
-  String selectedYearMonth = DateTime.now().year.toString() +  DateTime.now().month.toString().padLeft(2, '0');
+
+  // String selectedYearMonth = DateTime.now().year.toString() +  DateTime.now().month.toString().padLeft(2, '0');
+  late String selectedYearMonth;
   int selectedDay = DateTime.now().weekday == 7 ? 0 : DateTime.now().weekday;
   // late Future<List<Day>> selectedMonthCalendar = Future(() => [Day(DateTime.now())]);
-  late Future<List<Day>> selectedMonthCalendar = makeCalendar();
+  late Future<List<DayModel>> selectedMonthCalendar = makeCalendar(); // TODO 얘가 watch로 걸려있어야 변경시, 리렌더링됨.!
+  late Future<int> count = addCount();
+  int cnt = 0;
+
+
+  late int _cartSize;
+
+  // 생성자 선언
+  CalendarStore._privateConstructor(){
+     selectedYearMonth = DateTime.now().year.toString() +  DateTime.now().month.toString().padLeft(2, '0');
+     // selectedDay = DateTime.now().weekday == 7 ? 0 : DateTime.now().weekday;
+     // selectedMonthCalendar = makeCalendar(); // TODO 얘가 watch로 걸려있어야 변경시, 리렌더링됨.!
+     // Future<int> count = addCount();
+     // cnt = 0;
+    _cartSize = 0;
+    cnt = 0;
+  }
+
+  // 인스턴스 할당
+  static final CalendarStore _instance = CalendarStore._privateConstructor();
+
+  factory CalendarStore(){
+    return _instance;
+  }
+
+  // String selectedYearMonth = DateTime.now().year.toString() +  DateTime.now().month.toString().padLeft(2, '0');
+  // int selectedDay = DateTime.now().weekday == 7 ? 0 : DateTime.now().weekday;
+  // // late Future<List<Day>> selectedMonthCalendar = Future(() => [Day(DateTime.now())]);
+  // late Future<List<DayModel>> selectedMonthCalendar = makeCalendar(); // TODO 얘가 watch로 걸려있어야 변경시, 리렌더링됨.!
+  // late Future<int> count = addCount();
+  // int cnt = 0;
+
+  addCnt(){
+    print('cnt : $cnt');
+    cnt++;
+    print('cnt : $cnt');
+    notifyListeners();
+  }
+
+  /// test
+  /// +1
+  Future<int> addCount() async {
+    var storage = await SharedPreferences.getInstance();
+    int current = storage.getInt("count") ?? 0;
+    int newValue = current + 1;
+    storage.setInt('count', newValue);
+    print('newValue : $newValue');
+    return storage.getInt("count") as int;
+  }
+
+  Future<int?> addCount2() async {
+    count = addCount();
+    notifyListeners();
+  }
 
   /// 캘린더
   /// 연, 월 선택
@@ -45,17 +106,25 @@ class CalendarStore extends ChangeNotifier {
   /// 캘린더
   /// 선택된 날짜의 인텍스 저장
   setSelectedDay(int index) {
+    print('setSelectedDay');
     selectedDay = index;
 
     // 상태값 감시
     notifyListeners();
+
+
+
+  }
+
+  getSelectedDay() {
+    return selectedDay;
   }
 
   /// 캘린더
   /// 캘린더 조회
   /// 1.날짜 생성
   /// 2. Documnet 로컬 DB 조회
-  Future<List<Day>> makeCalendar({int? year, int? month}) async {
+  Future<List<DayModel>> makeCalendar({int? year, int? month}) async {
     print("makeCalendar");
 
     // year, month 초기화
@@ -64,24 +133,24 @@ class CalendarStore extends ChangeNotifier {
 
     var storage = await SharedPreferences.getInstance();
 
-    List<Day> newCalendar = [];
+    List<DayModel> newCalendar = [];
     DateTime firstDay = DateTime(year, month, 1);
     int startWeekDay = firstDay.weekday;
 
     // Docs 있는 Days 가져오기
-    var dayList = getDaysAddedDocsTreeMonth(year, month, storage);
+    // var dayList = getDaysAddedDocsTreeMonth(year, month, storage);
 
     // 캘린더 생성 + Doc 추가
     for (var day = 0; day < 42; day++) {
       // 첫번째주이고, 시작하는 요일이 startWeekDay인가?
       if (day < 7 && startWeekDay == day) {
-        var initDay = Day(firstDay);
-        initDay.setDocs(dayList);
+        var initDay = DayModel(firstDay);
+        // initDay.setDocs(dayList);
         newCalendar.add(initDay);
       } else {
         DateTime anotherDay = DateTime(year, month, 1).add(Duration(days: day - startWeekDay));
-        var initDay = Day(anotherDay);
-        initDay.setDocs(dayList);
+        var initDay = DayModel(anotherDay);
+        // initDay.setDocs(dayList);
         newCalendar.add(initDay);
       }
     }
@@ -111,7 +180,7 @@ class CalendarStore extends ChangeNotifier {
           var docList = [];
           for (var docKey in docKeys) {
             var doc = storage.getString(docKey) ?? '';
-            if(doc.isNotEmpty) docList.add(Document.fromJson(jsonDecode(doc)));
+            if(doc.isNotEmpty) docList.add(DocumentModel.fromJson(jsonDecode(doc)));
           }
           days[dayKey] = docList;
         }
@@ -142,7 +211,7 @@ class CalendarStore extends ChangeNotifier {
     var yearMonthDay = year + month + day;
 
     // Todo-Doc 생성
-    var document = Document.createTodo(
+    var document = DocumentModel.createTodo(
       docDate: yearMonthDay,
       docContent: doc,
       createDate: nowDate,
@@ -165,10 +234,13 @@ class CalendarStore extends ChangeNotifier {
       var value = storage.get(element);
       print(value.toString());
       // 제거
-      // storage.remove(element);
+      storage.remove(element);
     });
 
-    makeCalendar();
+    // TODO 저장후 다시 조회하기
+    // selectedMonthCalendar = await Future(() => makeCalendar());
+    selectedMonthCalendar = makeCalendar();
+    // notifyListeners();
   }
 
   /// 캘린더
