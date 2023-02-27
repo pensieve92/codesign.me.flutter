@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
 import 'package:me/services/calendar/model/DayModel.dart';
 import 'package:me/services/calendar/model/WeekdayModel.dart';
 import 'package:me/stores/CalendarStoreV2.dart';
 import 'package:me/utils/CalendarUtil.dart';
+import 'package:me/widgets/calendar/CalendarFooterV2.dart';
 import 'package:me/widgets/calendar/CalendarHeaderV2.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
 import 'package:me/widgets/calendar/DayWidget.dart';
-import 'package:me/utils/commonUtil.dart';
+import 'package:provider/provider.dart';
 
 import '../../stores/CalendarStore.dart';
 
@@ -63,7 +63,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           ],
         ),
       ),
-      bottomSheet: Container(child: Text('bottom'), color: Colors.orange),
+      bottomSheet: CalendarFooterV2(),
     );
   }
 
@@ -141,76 +141,6 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           child: SizedBox(
             height: 53.0,
           ),
-        ),
-      ],
-    );
-  }
-
-  /// 캘린더 - footer 저장 입력바
-  /// TODO CalendarFooter Widget class
-  Row baseCalendarBottomSheet(BuildContext context) {
-    return Row(
-      children: [
-        Flexible(
-          child: TextField(
-            // TODO
-            // 커서가 올라가면 borderRadius가 적용이 안된다.
-            // 커서올라같을때 시타일 지정하는게 있는지 찾아보기
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.blue.shade100,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide(
-                  color: Colors.green,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            controller: _docContentEditController,
-          ),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-          ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-          onPressed: () {},
-          // 키보드 활성 여부에 따라 버튼 아이콘 변경
-          child: gf_isShowKeyboard(context)
-              ? IconButton(
-                  icon: Icon(Icons.check),
-                  onPressed: () async {
-                    print('click check butotn ');
-                    // saveDoc DocType >>  일정, 메모, todo, note post
-                    // context
-                    //     .read<CalendarStore>()
-                    //     .saveDoc(_docContentEditController.text);
-                    context.read<CalendarStore>().addCount2();
-
-                    // TODO 저장후 리렌더링
-                    // setState(() {
-                    //   daysOfMonth = context.read<CalendarStore>().selectedMonthCalendar;
-                    //   if(daysOfMonth != null){
-                    //
-                    //     daysOfMonth!.then((value) => {
-                    //
-                    //       print('daysOfMonth : ${value[0].docs[value[0].docs.length -1].docContent}')
-                    //
-                    //     });
-                    //     print('daysOfMonth : $daysOfMonth');
-                    //   }
-                    //
-                    // });
-                  },
-                )
-              : IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    // TODO 상세 입력폼 나오게 분리하기
-                    print('click add butotn ');
-                  },
-                ),
         ),
       ],
     );
