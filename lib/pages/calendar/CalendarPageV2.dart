@@ -67,65 +67,6 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
     );
   }
 
-  /// 캘린더 - header AppBar
-  /// TODO CalendarHeader Widget class
-  AppBar baseCalendarAppBar(BuildContext context) {
-    return AppBar(
-      leading: IconButton(
-        onPressed: () {
-          print('click menu icon');
-        },
-        icon: Icon(Icons.menu_rounded),
-      ),
-      title: ElevatedButton(
-        onPressed: () {
-          print('show modal');
-        },
-        style: ElevatedButton.styleFrom(
-          fixedSize: Size(100, 45),
-          backgroundColor: Colors.black,
-          textStyle: TextStyle(fontSize: 20),
-          padding: EdgeInsets.only(left: 0),
-        ),
-        child: Row(
-          children: [
-            Text(context.watch<CalendarStore>().selectedYearMonth),
-            Icon(Icons.arrow_drop_down),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('오늘',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.grey,
-                )
-              ]),
-          onPressed: () => context.read<CalendarStore>().setToday(),
-        ),
-        IconButton(
-          onPressed: () {
-            print('click search icon');
-          },
-          icon: Icon(Icons.search_rounded),
-        ),
-        IconButton(
-          onPressed: () {
-            print('click calendar month icon');
-          },
-          icon: Icon(Icons.calendar_month_rounded),
-        ),
-      ],
-      backgroundColor: Colors.black,
-    );
-  }
-
   /// 캘린더 - body
   /// TODO CalendarBody Widget class
   CustomScrollView baseCalendarBody(

@@ -22,4 +22,9 @@ class CalendarUtil {
     return DateTime(dateTime.year, dateTime.month - 1, 1);;
   }
 
+  /// 오늘
+  static DateTime getToday(DateTime dateTime){
+    return DateTime.now();
+  }
+
 }
