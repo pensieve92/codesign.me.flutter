@@ -12,6 +12,13 @@ class CalendarBodyV4 extends StatefulWidget {
 }
 
 class _CalendarBodyV4 extends State<CalendarBodyV4> {
+  // 전체: 24
+  var headFlex = 1;
+  var bodyFlex = 21;
+  var footFlex = 2;
+
+  var expandFooter = false;
+
   @override
   Widget build(BuildContext context) {
     var store = context.watch<CalendarStoreV2>();
@@ -22,14 +29,14 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
     return Column(
       children: [
         // 헤더
-        Flexible(flex: 1, child: createHeader()),
+        Flexible(flex: headFlex, child: createHeader()),
         // 바디
         Flexible(
-          flex: 21,
+          flex: bodyFlex,
           child: createBody(calendar),
         ),
         // 풋터
-        Flexible(flex: 2, child: createFooter()),
+        Flexible(flex: footFlex, child: createFooter()),
       ],
     );
   }
@@ -64,7 +71,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   /// 캘린더 Body 영역
   Column createBody(List<DateTime> calendar) {
     var store = context.watch<CalendarStoreV2>();
-    DateTime thisMonth =  store.thisMonth;
+    DateTime thisMonth = store.thisMonth;
 
     // 42개를 7일씩 6주로 끊기
     const daysOfWeek = 7;
@@ -75,31 +82,43 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
 
     return Column(
       children: weekList
-          .map((week) => Flexible(
+          .map(
+            (week) => Flexible(
               child: Row(
-                  children: week.map((day) => Expanded(
-                              child: Container(
-                                alignment: Alignment.center,
-                                color: Colors.black,
-                                // TODO 상태변화 감지 이거 때문인지 확인하기
-                                child: GestureDetector(
-                                  onTap: () => {},
-                                  child: Opacity(
-                                    opacity: day.month == thisMonth.month ? 1.0 : 0.5,
-                                    child: Container(
-                                      // decoration: setSelectedDayStyle(index),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [Text(day.day.toString(), style: TextStyle(color: Colors.white),)],
-                                      ),
-                                    ),
+                  children: week
+                      .map(
+                        (day) => Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.black,
+                            // TODO 상태변화 감지 이거 때문인지 확인하기
+                            child: GestureDetector(
+                              onTap: () => {},
+                              child: Opacity(
+                                opacity:
+                                    day.month == thisMonth.month ? 1.0 : 0.5,
+                                child: Container(
+                                  // decoration: setSelectedDayStyle(index),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        day.day.toString(),
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    ],
                                   ),
                                 ),
+                              ),
+                            ),
                           ),
-                  ),
-                  ).toList()),
+                        ),
+                      )
+                      .toList()),
             ),
-          ).toList(),
+          )
+          .toList(),
     );
   }
 
@@ -108,6 +127,26 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   Container createFooter() {
     return Container(
       color: Colors.yellowAccent,
+      child: IconButton(
+        onPressed: () => {toggleCalendarRatio()},
+        icon: Icon(Icons.add),
+      ),
     );
+  }
+
+  /// toggleCalendarRatio
+  /// body, footer 영역 확대/축소
+  toggleCalendarRatio() {
+    setState(() {
+      if(expandFooter == true){
+        bodyFlex = 11;
+        footFlex = 12;
+      }else{
+        bodyFlex = 21;
+        footFlex = 2;
+      }
+
+      expandFooter = !expandFooter;
+    });
   }
 }
