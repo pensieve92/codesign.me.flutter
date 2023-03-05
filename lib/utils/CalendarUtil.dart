@@ -46,11 +46,18 @@ class CalendarUtil {
     return calendar;
   }
 
+  /// 캘린더 그리드 헤더
+  static List<Map<String, Object>> getWeekDays(){
+    return weekdayConstants;
+  }
+
+  @Deprecated("V4 변경완료시, 제거 예정")
   /// 캘린더 그리드 헤더 (월~일 텍스트 추출)
   static String getWeekDayText(int i){
     return (weekdayConstants[i]['text'] as Map)['ko'];
   }
 
+  @Deprecated("V4 변경완료시, 제거 예정")
   /// 캘린더 그리드 헤더 (월~일 Color 추출)
   static Color getWeekDayColor(int i){
     return (weekdayConstants[i]['color'] as Color);

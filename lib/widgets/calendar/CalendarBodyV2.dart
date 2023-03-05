@@ -80,16 +80,18 @@ class _CalendarBodyV2 extends State<CalendarBodyV2> {
           ),
         ),
 
+        // SliverAppBar(title: Text("sliverAppbar"), titleTextStyle: TextStyle(color: Colors.white),)
+
         // SliverFixedExtentList(delegate: SliverChildBuilderDelegate((BuildContext context, int index){
         //   return ListTile(title: Text('List Item'));
         // }), itemExtent: 10.0),
 
         // bottomSheet 높이만큼 height를 지정해주자
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: 53.0,
-          ),
-        ),
+        // SliverToBoxAdapter(
+        //   child: SizedBox(
+        //     height: 53.0,
+        //   ),
+        // ),
       ],
     );
   }

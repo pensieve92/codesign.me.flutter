@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
 import 'package:me/widgets/calendar/CalendarBodyV2.dart';
+import 'package:me/widgets/calendar/CalendarBodyV3.dart';
+import 'package:me/widgets/calendar/CalendarBodyV4.dart';
 import 'package:me/widgets/calendar/CalendarFooterV2.dart';
 import 'package:me/widgets/calendar/CalendarHeaderV2.dart';
 import 'package:provider/provider.dart';
@@ -34,32 +36,39 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
 
     return Scaffold(
       appBar: CalendarHeaderV2(),
-      body: Container(
-        color: Colors.blue,
-        child: CalendarBodyV2(),
-        // child: Row(),
-        // Row(
-        //   children: [
-        //     IconButton(
-        //       onPressed: () => {
-        //         print('prev Month'),
-        //         store.setThisMonth(CalendarUtil.getPreMonth(thisMonth)),
-        //       },
-        //       icon: Icon(Icons.arrow_back_ios_rounded),
-        //       color: Colors.orangeAccent,
-        //     ),
-        //     IconButton(
-        //       onPressed: () => {
-        //         print('next Month'),
-        //         store.setThisMonth(CalendarUtil.getNextMonth(thisMonth)),
-        //       },
-        //       icon: Icon(Icons.arrow_forward_ios_rounded),
-        //       color: Colors.orangeAccent,
-        //     ),
-        //   ],
-        // ),
-      ),
-      bottomSheet: CalendarFooterV2(),
+      // body: CalendarBodyV2(), // TODO 스크롤을 없애기 위해, SliverGrid >> GridView로 변경
+      // body: CalendarBodyV3(), // TODO 스크롤을 없애기 위해, SliverGrid >> GridView로 변경
+      body: CalendarBodyV4(), // TODO SliverGrid >> Column, Row로 변경
+      // body: Column(
+      //   children: [
+      //     Flexible(
+      //       // flex: 10,
+      //       // Container를 Expanded로 감싸줌, 파란색 박스
+      //       // child: Container(
+      //       //   color: Colors.blue,
+      //       // ),
+      //       child: CalendarBodyV2(),
+      //     ),
+      //     Expanded(
+      //       // Container를 Expanded로 감싸줌, 빨간색 박스
+      //       child: Container(
+      //         color: Colors.red,
+      //       ),
+      //     ),
+      //
+      //   ],
+      // )
+      // bottomSheet: CalendarFooterV2(),
+      // bottomNavigationBar: BottomAppBar(
+      //   color: Colors.orangeAccent,
+      //   child: Text('bottomNavigationBar'),
+      // ),
+      // persistentFooterButtons: [
+      //   IconButton(
+      //     icon: Icon(Icons.add),
+      //     onPressed: null,
+      //   )
+      // ],
     );
   }
 
