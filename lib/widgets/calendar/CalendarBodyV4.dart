@@ -17,7 +17,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   var bodyFlex = 21;
   var footFlex = 2;
 
-  var expandFooter = false;
+  var toggleFooter = false;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +128,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
     return Container(
       color: Colors.yellowAccent,
       child: IconButton(
-        onPressed: () => {toggleCalendarRatio()},
+        onPressed: () => {toggleFooterRatio()},
         icon: Icon(Icons.add),
       ),
     );
@@ -136,9 +136,9 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
 
   /// toggleCalendarRatio
   /// body, footer 영역 확대/축소
-  toggleCalendarRatio() {
+  toggleFooterRatio() {
     setState(() {
-      if(expandFooter == true){
+      if(toggleFooter == false){
         bodyFlex = 11;
         footFlex = 12;
       }else{
@@ -146,7 +146,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
         footFlex = 2;
       }
 
-      expandFooter = !expandFooter;
+      toggleFooter = !toggleFooter;
     });
   }
 }
