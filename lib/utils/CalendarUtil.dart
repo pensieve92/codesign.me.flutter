@@ -14,6 +14,16 @@ class CalendarUtil {
     return YYYYMM.toString();
   }
 
+  /// @return 2023.02.11
+  static String getYYYYMMDD(DateTime dateTime) {
+    StringBuffer YYYYMMDD = StringBuffer();
+    YYYYMMDD.write(dateTime.year.toString());
+    YYYYMMDD.write(dateTime.month.toString().padLeft(2, '0'));
+    YYYYMMDD.write(dateTime.day.toString().padLeft(2, '0'));
+
+    return YYYYMMDD.toString();
+  }
+
   /// 다음달
   static DateTime getNextMonth(DateTime dateTime){
     return DateTime(dateTime.year, dateTime.month + 1, 1);
@@ -24,9 +34,14 @@ class CalendarUtil {
     return DateTime(dateTime.year, dateTime.month - 1, 1);;
   }
 
-  /// 오늘
-  static DateTime getToday(DateTime dateTime){
-    return DateTime.now();
+  /// getToday
+  /// 오늘 - 시간 초기화
+  static DateTime getToday(){
+    var now =  DateTime.now();
+    int year = now.year;
+    int month = now.month;
+    int day = now.day;
+    return DateTime(year, month, day);
   }
 
   /// 캘린더 생성

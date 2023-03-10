@@ -12,12 +12,15 @@ class CalendarBodyV4 extends StatefulWidget {
 }
 
 class _CalendarBodyV4 extends State<CalendarBodyV4> {
+
+  var toggleFooter = false;
   // 전체: 24
   var headFlex = 1;
   var bodyFlex = 21;
   var footFlex = 2;
 
-  var toggleFooter = false;
+  // 선택된 날
+  DateTime selectedDay = CalendarUtil.getToday();
 
   @override
   Widget build(BuildContext context) {
@@ -82,35 +85,32 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
 
     return Column(
       children: weekList
-          .map(
-            (week) => Flexible(
+          .map((week) => Flexible(
               child: Row(
                   children: week
-                      .map(
-                        (day) => Expanded(
-                          child: Container(
-                            alignment: Alignment.center,
-                            color: Colors.black,
-                            // TODO 상태변화 감지 이거 때문인지 확인하기
-                            child: GestureDetector(
-                              onTap: () => {},
-                              child: Opacity(
-                                opacity:
-                                    day.month == thisMonth.month ? 1.0 : 0.5,
+                      .map((day) => Expanded(
+                          child: GestureDetector(
+                            onTap: () => {
+                              selectDay(day)
+                            },
+                            child: Container(
+                              decoration: selectedDayDecoration(day),
                                 child: Container(
-                                  // decoration: setSelectedDayStyle(index),
+                                  alignment: Alignment.center,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        day.day.toString(),
-                                        style: TextStyle(color: Colors.white),
+                                      Opacity(
+                                        opacity: day.month == thisMonth.month ? 1.0 : 0.5,
+                                        child: Text(
+                                          day.day.toString(),
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       )
                                     ],
                                   ),
                                 ),
-                              ),
                             ),
                           ),
                         ),
@@ -138,15 +138,41 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   /// body, footer 영역 확대/축소
   toggleFooterRatio() {
     setState(() {
-      if(toggleFooter == false){
+      if (toggleFooter == false) {
         bodyFlex = 11;
         footFlex = 12;
-      }else{
+      } else {
         bodyFlex = 21;
         footFlex = 2;
       }
 
       toggleFooter = !toggleFooter;
     });
+  }
+
+  /// selectDay
+  /// 날짜 선택
+  selectDay(day){
+    setState(() {
+      selectedDay = day;
+    });
+  }
+
+  /// setSelectedDayStyle
+  /// 선택된 날짜 데코레이션
+  BoxDecoration selectedDayDecoration(day) {
+    if (selectedDay == day) {
+      return BoxDecoration(
+          color: Colors.black,
+          border: Border.all(
+            color: Colors.white,
+            width: 1.0,
+          ),
+      );
+    } else {
+      return BoxDecoration(
+        color: Colors.black,
+      );
+    }
   }
 }
