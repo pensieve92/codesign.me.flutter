@@ -25,7 +25,7 @@ class CalendarHeaderV2 extends StatelessWidget implements PreferredSizeWidget {
         },
         style: ElevatedButton.styleFrom(
           fixedSize: Size(100, 45),
-          backgroundColor: Colors.black,
+          backgroundColor: Theme.of(context).backgroundColor,
           textStyle: TextStyle(fontSize: 20),
           padding: EdgeInsets.only(left: 0),
         ),
@@ -40,10 +40,8 @@ class CalendarHeaderV2 extends StatelessWidget implements PreferredSizeWidget {
         TextButton(
           child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('오늘',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+              children: [
+                Text('오늘', style: Theme.of(context).textTheme.headline2),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: Colors.grey,

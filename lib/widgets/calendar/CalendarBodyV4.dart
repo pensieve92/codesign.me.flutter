@@ -57,7 +57,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
           children: weekDays
               .map((item) => Expanded(
                       child: Container(
-                    color: Colors.black,
+                    color: Theme.of(context).backgroundColor,
                     alignment: Alignment.center,
                     child: Text(
                       (item['text'] as Map)[lang],
@@ -105,7 +105,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
                                         opacity: day.month == thisMonth.month ? 1.0 : 0.5,
                                         child: Text(
                                           day.day.toString(),
-                                          style: TextStyle(color: Colors.white),
+                                          style: Theme.of(context).textTheme.bodyText2,
                                         ),
                                       )
                                     ],
@@ -163,7 +163,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   BoxDecoration selectedDayDecoration(day) {
     if (selectedDay == day) {
       return BoxDecoration(
-          color: Colors.black,
+          color: Theme.of(context).backgroundColor,
           border: Border.all(
             color: Colors.white,
             width: 1.0,
@@ -171,7 +171,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
       );
     } else {
       return BoxDecoration(
-        color: Colors.black,
+        color: Theme.of(context).backgroundColor,
       );
     }
   }
