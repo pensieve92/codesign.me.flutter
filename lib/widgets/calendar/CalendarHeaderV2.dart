@@ -39,7 +39,7 @@ class CalendarHeaderV2 extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('오늘', style: Theme.of(context).textTheme.headline2),
                 Icon(
