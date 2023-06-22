@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:me/utils/CalendarUtil.dart';
 import 'package:provider/provider.dart';
+import 'package:me/utils/commonUtil.dart';
 
 import '../../stores/CalendarStoreV2.dart';
 
@@ -12,12 +14,14 @@ class CalendarBodyV4 extends StatefulWidget {
 }
 
 class _CalendarBodyV4 extends State<CalendarBodyV4> {
-
   var toggleFooter = false;
+  var flagKeyBoard = false;
+
   // 전체: 24
+  // TODO 캘린더 아래 상세내역 보는 부분 필요
   var headFlex = 1;
-  var bodyFlex = 21;
-  var footFlex = 2;
+  var bodyFlex = 12;
+  var footFlex = 11;
 
   // 선택된 날
   DateTime selectedDay = CalendarUtil.getToday();
@@ -39,7 +43,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
           child: createBody(calendar),
         ),
         // 풋터
-        Flexible(flex: footFlex, child: createFooter()),
+        Flexible(flex: footFlex, child: Container(color: Colors.orange,)),
       ],
     );
   }
@@ -85,32 +89,35 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
 
     return Column(
       children: weekList
-          .map((week) => Flexible(
+          .map(
+            (week) => Flexible(
               child: Row(
                   children: week
-                      .map((day) => Expanded(
+                      .map(
+                        (day) => Expanded(
                           child: GestureDetector(
-                            onTap: () => {
-                              selectDay(day)
-                            },
+                            onTap: () => {selectDay(day)},
                             child: Container(
                               decoration: selectedDayDecoration(day),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Opacity(
-                                        opacity: day.month == thisMonth.month ? 1.0 : 0.5,
-                                        child: Text(
-                                          day.day.toString(),
-                                          style: Theme.of(context).textTheme.bodyText2,
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Opacity(
+                                      opacity: day.month == thisMonth.month
+                                          ? 1.0
+                                          : 0.5,
+                                      child: Text(
+                                        day.day.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                    )
+                                  ],
                                 ),
+                              ),
                             ),
                           ),
                         ),
@@ -124,35 +131,36 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
 
   /// createFooter
   /// 입력 input 영역
-  Container createFooter() {
-    return Container(
-      color: Colors.yellowAccent,
-      child: IconButton(
-        onPressed: () => {toggleFooterRatio()},
-        icon: Icon(Icons.add),
-      ),
-    );
-  }
+  // Container testToggleFooter() {
+  //   return Container(
+  //     color: Colors.yellowAccent,
+  //     child: IconButton(
+  //       onPressed: () => {toggleFooterRatio()},
+  //       icon: Icon(Icons.add),
+  //     ),
+  //   );
+  // }
 
+  // TODO
   /// toggleCalendarRatio
   /// body, footer 영역 확대/축소
-  toggleFooterRatio() {
-    setState(() {
-      if (toggleFooter == false) {
-        bodyFlex = 11;
-        footFlex = 12;
-      } else {
-        bodyFlex = 21;
-        footFlex = 2;
-      }
-
-      toggleFooter = !toggleFooter;
-    });
-  }
+  // toggleFooterRatio() {
+  //   setState(() {
+  //     if (toggleFooter == false) {
+  //       bodyFlex = 11;
+  //       footFlex = 12;
+  //     } else {
+  //       bodyFlex = 21;
+  //       footFlex = 2;
+  //     }
+  //
+  //     toggleFooter = !toggleFooter;
+  //   });
+  // }
 
   /// selectDay
   /// 날짜 선택
-  selectDay(day){
+  selectDay(day) {
     setState(() {
       selectedDay = day;
     });
@@ -163,11 +171,11 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   BoxDecoration selectedDayDecoration(day) {
     if (selectedDay == day) {
       return BoxDecoration(
-          color: Theme.of(context).backgroundColor,
-          border: Border.all(
-            color: Colors.white,
-            width: 1.0,
-          ),
+        color: Theme.of(context).backgroundColor,
+        border: Border.all(
+          color: Colors.white,
+          width: 1.0,
+        ),
       );
     } else {
       return BoxDecoration(
@@ -175,4 +183,5 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
       );
     }
   }
+
 }
