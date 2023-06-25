@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:me/widgets/calendar/CalendarBodyV2.dart';
 import 'package:me/widgets/calendar/CalendarBodyV3.dart';
 import 'package:me/widgets/calendar/CalendarBodyV4.dart';
@@ -20,27 +23,46 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
   var gridCellRatio = 1 / 2; // 가로 제로 비율
   final _docContentEditController = TextEditingController();
 
+  // keyboard show/hide listener
+  late StreamSubscription<bool> keyboardSubscription;
   var flagKeyBoard = false;
 
   @override
   void initState() {
     super.initState();
+
+    // keyboard show/hide listener
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    // Query
+    print(
+        'Keyboard visibility direct query: ${keyboardVisibilityController.isVisible}');
+    // Subscribe
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      print('Keyboard visibility update. Is visible: $visible');
+      flagKeyBoard = visible;
+    });
   }
 
   @override
   void dispose() {
     _docContentEditController.dispose();
+
+    // keyboard show/hide listener
+    keyboardSubscription.cancel();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: CalendarHeaderV2(),
-      drawer: Drawer(backgroundColor: Colors.greenAccent,
-        child: Container(color: Colors.red,
-            width: 100,
+      drawer: Drawer(
+        backgroundColor: Colors.greenAccent,
+        child: Container(
+          color: Colors.red,
+          width: 100,
           child: Text("drawer"),
         ),
       ),
@@ -64,13 +86,8 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
       ),
       // TODO 키보드가 없으면 추가 버튼이고
       // TODO 키보드가 있으면 생성 버튼으로
-      bottomSheet: Container(
-        color: Colors.red,
-        height: 40,
-        child: TextField(
-          controller: new TextEditingController(),
-        ),
-      ),
+      bottomSheet:
+          Container(color: Colors.red, height: 40, child: createFooter()),
     );
   }
 
@@ -86,44 +103,25 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
       minLines: null,
       maxLines: null,
       onTap: () => {
-        toggleKeyBoard()
+        // toggleKeyBoard()
       },
       decoration: InputDecoration(
           filled: true,
           suffixIcon: ElevatedButton(
               onPressed: () => {},
-              // child: isShowKeyboard(context)
               child: flagKeyBoard
                   ?
-              // 키보드가 나온 경우
-              IconButton(
-                alignment: Alignment.topLeft,
-                icon: Icon(
-                  Icons.add_box_rounded,
-                  size: 30,
-                ),
-                onPressed: () => {print('add button')},
-              )
-              // 키보드가 들어간 경우
+                  // 키보드가 올라온 경우, 저장
+                  IconButton(
+                      alignment: Alignment.topLeft,
+                      icon: Icon(Icons.done_outline, size: 30,),
+                      onPressed: () => {print('save button')},
+                    )
+                  // 키보드가 들어간 경우, Dialog 띄우기
                   : IconButton(
-                  onPressed: () => {
-
-                  }, icon: Icon(Icons.done_outline)))),
+                      onPressed: () => {print('open dialog button')},
+                      icon: Icon(size: 30, Icons.add_box_rounded)))),
       controller: textEditingController,
     );
   }
-
-  toggleKeyBoard() {
-    print("flagKeyBoard $flagKeyBoard");
-    if (MediaQuery.of(context).viewInsets.bottom != 0.0) {
-      setState(() {
-        flagKeyBoard = false;
-      });
-    }else{
-      setState(() {
-        flagKeyBoard = true;
-      });
-    }
-  }
-
 }
