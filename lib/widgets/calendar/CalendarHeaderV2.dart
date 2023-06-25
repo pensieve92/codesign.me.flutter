@@ -13,12 +13,12 @@ class CalendarHeaderV2 extends StatelessWidget implements PreferredSizeWidget {
     DateTime thisMonth =  store.thisMonth;
 
     return AppBar(
-      leading: IconButton(
-        onPressed: () {
-          print('click menu icon');
-        },
-        icon: Icon(Icons.menu_rounded),
-      ),
+      // leading: IconButton(
+      //   onPressed: () {
+      //     print('click menu icon');
+      //   },
+      //   icon: Icon(Icons.menu_rounded),
+      // ),
       title: ElevatedButton(
         onPressed: () {
           print('show modal');

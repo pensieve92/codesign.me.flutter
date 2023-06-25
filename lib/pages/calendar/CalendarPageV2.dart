@@ -38,24 +38,30 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
 
     return Scaffold(
       appBar: CalendarHeaderV2(),
-      body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height,
-          ),
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(child: CalendarBodyV4())
-                // CONTENT HERE
-              ],
-            ),
-          ),
+      drawer: Drawer(backgroundColor: Colors.greenAccent,
+        child: Container(color: Colors.red,
+            width: 100,
+          child: Text("drawer"),
         ),
       ),
+      // body: SingleChildScrollView(
+      //   physics: const NeverScrollableScrollPhysics(),
+      //   child: ConstrainedBox(
+      //     constraints: BoxConstraints(
+      //       minWidth: MediaQuery.of(context).size.width,
+      //       minHeight: MediaQuery.of(context).size.height,
+      //     ),
+      //     child: IntrinsicHeight(
+      //       child: Column(
+      //         mainAxisSize: MainAxisSize.max,
+      //         children: <Widget>[
+      //           Expanded(child: CalendarBodyV4())
+      //           // CONTENT HERE
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
       // TODO 키보드가 없으면 추가 버튼이고
       // TODO 키보드가 있으면 생성 버튼으로
       bottomSheet: Container(
