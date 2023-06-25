@@ -84,8 +84,6 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           ),
         ),
       ),
-      // TODO 키보드가 없으면 추가 버튼이고
-      // TODO 키보드가 있으면 생성 버튼으로
       bottomSheet:
           Container(color: Colors.red, height: 40, child: createFooter()),
     );
@@ -102,9 +100,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
       expands: true,
       minLines: null,
       maxLines: null,
-      onTap: () => {
-        // toggleKeyBoard()
-      },
+      onTap: () => {},
       decoration: InputDecoration(
           filled: true,
           suffixIcon: ElevatedButton(
@@ -115,7 +111,10 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
                   IconButton(
                       alignment: Alignment.topLeft,
                       icon: Icon(Icons.done_outline, size: 30,),
-                      onPressed: () => {print('save button')},
+                      onPressed: () => {
+                        // TODO 저장로직 개발
+                        print('save button')
+                      },
                     )
                   // 키보드가 들어간 경우, Dialog 띄우기
                   : IconButton(
