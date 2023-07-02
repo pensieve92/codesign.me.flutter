@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:me/stores/CalendarStoreV2.dart';
 import 'package:provider/provider.dart';
 
@@ -7,8 +8,17 @@ import 'package:me/pages/calendar/CalendarPageV2.dart';
 
 import 'package:me/stores/CalendarStore.dart';
 
+import 'db/DbSource.dart';
 
-void main() {
+
+void main() async {
+   final database = LocalDataBase();
+
+   GetIt.I.registerSingleton(database);
+
+
+
+
   runApp(GestureDetector(
     onTap: () => {FocusManager.instance.primaryFocus?.unfocus()},
     child: MaterialApp(

@@ -50,8 +50,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  drift_dev: 2.1.0    # 1. Drift 코드 생성 기능 관련 플러그인
-  build_runner: 2.2.0 # 2. 코드 생성 기능을 제공해주는 플러그인
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -59,6 +58,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+  drift_dev: 2.1.0    # 1. Drift 코드 생성 기능 관련 플러그인
+  build_runner: 2.2.0 # 2. 코드 생성 기능을 제공해주는 플러그인
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

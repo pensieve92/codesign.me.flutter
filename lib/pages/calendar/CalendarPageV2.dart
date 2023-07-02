@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:drift/drift.dart' hide Column;
+import 'package:get_it/get_it.dart';
+import 'package:me/db/DbSource.dart';
 import 'package:me/widgets/calendar/CalendarBodyV2.dart';
 import 'package:me/widgets/calendar/CalendarBodyV3.dart';
 import 'package:me/widgets/calendar/CalendarBodyV4.dart';
 import 'package:me/widgets/calendar/CalendarFooterV2.dart';
 import 'package:me/widgets/calendar/CalendarHeaderV2.dart';
 import 'package:provider/provider.dart';
+import './dialog/DialogExample.dart';
 
 import '../../stores/CalendarStore.dart';
 
@@ -110,16 +114,33 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
                   // 키보드가 올라온 경우, 저장
                   IconButton(
                       alignment: Alignment.topLeft,
-                      icon: Icon(Icons.done_outline, size: 30,),
-                      onPressed: () => {
+                      icon: Icon(
+                        Icons.done_outline,
+                        size: 30,
+                      ),
+                      onPressed: () async => {
+                        print('save button'),
                         // TODO 저장로직 개발
-                        print('save button')
+                        // TODO SQLite 추가하기
+                        await GetIt.I<LocalDataBase>().createDocTypeGroup(
+                            DocTypeGroupCompanion(
+                                typeGroupId: Value('1'),
+                                typeGroupNm: Value('BASE'),
+                                useYn: Value('Y')
+                            )
+                        ),
+
                       },
                     )
                   // 키보드가 들어간 경우, Dialog 띄우기
-                  : IconButton(
-                      onPressed: () => {print('open dialog button')},
-                      icon: Icon(size: 30, Icons.add_box_rounded)))),
+                  : DialogExample()
+              // IconButton(
+              //   onPressed: () => {
+              //     print('open dialog button'),
+              //   },
+              //   icon: Icon(size: 30, Icons.add_box_rounded)
+              // )
+              )),
       controller: textEditingController,
     );
   }
