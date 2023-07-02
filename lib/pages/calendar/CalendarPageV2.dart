@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:get_it/get_it.dart';
 import 'package:me/db/DbSource.dart';
+import 'package:me/db/tables/DocType.dart';
 import 'package:me/widgets/calendar/CalendarBodyV2.dart';
 import 'package:me/widgets/calendar/CalendarBodyV3.dart';
 import 'package:me/widgets/calendar/CalendarBodyV4.dart';
@@ -118,15 +119,15 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
                         Icons.done_outline,
                         size: 30,
                       ),
-                      onPressed: () async => {
+                      onPressed: () async =>  {
                         print('save button'),
                         // TODO 저장로직 개발
                         // TODO SQLite 추가하기
-                        await GetIt.I<LocalDataBase>().createDocTypeGroup(
+                        await GetIt.I<LocalDataBase>().docTypeDao.createDocTypeGroup(
                             DocTypeGroupCompanion(
-                                typeGroupId: Value('1'),
-                                typeGroupNm: Value('BASE'),
-                                useYn: Value('Y')
+                                typeGroupId: Value('2'),
+                                typeGroupNm: Value('BASE2'),
+                                useYn: Value('N')
                             )
                         ),
 

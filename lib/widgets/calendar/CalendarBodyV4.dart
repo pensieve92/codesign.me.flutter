@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
+import 'package:me/db/DbSource.dart';
 import 'package:me/utils/CalendarUtil.dart';
 import 'package:provider/provider.dart';
 import 'package:me/utils/commonUtil.dart';
@@ -43,7 +45,22 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
           child: createBody(calendar),
         ),
         // 풋터
-        Flexible(flex: footFlex, child: Container(color: Colors.orange,)),
+        Flexible(flex: footFlex, child:
+          StreamBuilder<List<DocTypeGroupData>>(
+
+            // TODO 조회 확인 테스트
+            stream: GetIt.I<LocalDataBase>().docTypeDao.watchDocTypeGroup("1"),
+            builder: (context, snapshot) {
+              if(snapshot.hasData){
+                print('result : ${snapshot.data}');
+              }else{
+                print('result : no Data');
+              }
+
+              return Container(color: Colors.orange,);
+            }
+          ),
+        ),
       ],
     );
   }
