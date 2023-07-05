@@ -6,7 +6,9 @@ import 'package:me/db/tables/DocType.dart';
 // assuming that your file is called filename.dart. This will give an error at
 // first, but it's needed for drift to know about the generated code
 // 코드생성 명령어 >>> flutter packages pub run build_runner build --delete-conflicting-outputs
-part 'DocTypeDao.g.dart';
+// TODO file명 snake_case로 변경
+// TODO file명 snake_case.g.dart로 변경
+part 'generated/DocTypeDao.g.dart';
 
 
 // this annotation tells drift to prepare a database class that uses both of the

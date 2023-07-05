@@ -1,0 +1,18 @@
+targets:
+  $default:
+    builders:
+      source_gen|combining_builder:
+        options:
+          build_extensions:
+            '^lib/{{dir}}/{{file}}.dart': 'lib/{{dir}}/generated/{{file}}.g.dart'
+      freezed:
+        options:
+          build_extensions:
+            '^lib/{{dir}}/{{file}}.dart': 'lib/{{dir}}/generated/{{file}}.freezed.dart'
+      injectable_generator:injectable_builder:
+        options:
+          auto_register: true
+          file_name_pattern: "_usecase$|_controller$|_dao$"
+      drift_dev:
+        options:
+          store_date_time_values_as_text: true
