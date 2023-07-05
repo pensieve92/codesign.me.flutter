@@ -6,7 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:get_it/get_it.dart';
 import 'package:me/db/daos/datasource.dart';
-import 'package:me/db/tables/DocType.dart';
+import 'package:me/db/tables/DocTypeGroups.dart';
 import 'package:me/widgets/calendar/CalendarBodyV2.dart';
 import 'package:me/widgets/calendar/CalendarBodyV3.dart';
 import 'package:me/widgets/calendar/CalendarBodyV4.dart';
@@ -124,7 +124,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
                         // TODO 저장로직 개발
                         // TODO SQLite 추가하기
                         await GetIt.I<LocalDataBase>().docTypeDao.createDocTypeGroup(
-                            DocTypeGroupCompanion(
+                            DocTypeGroupsCompanion(
                                 typeGroupId: Value('2'),
                                 typeGroupNm: Value('BASE2'),
                                 useYn: Value('N')

@@ -1,8 +1,9 @@
 import 'package:drift/drift.dart';
 
 // TODO 테이블 명을 지정하지 않으면 DocTypeGroupData로 Data가 붙는다.??
-// 아니면 class명에 s 를 붙여서 DocTypeGroups 짓게 되면 DocTypeGroup로 되려나..공식 문서 보니까 그런듯..
-class DocTypeGroup extends Table {
+// TODO class명에 s 를 붙여서 DocTypeGroups 짓게 되면 DocTypeGroup로 되려나..공식 문서 보니까 그런듯..
+// TODO >>> class명에 s 붙여서 클래스명 변경하기
+class DocTypeGroups extends Table {
   TextColumn get typeGroupId => text().unique().nullable()(); // "타입그룹ID" : BASE
   TextColumn get typeGroupNm => text().nullable()();          // "타입그룹명" : Calendar
   TextColumn get useYn => text().withLength(max: 1)();        // "사용여부"   : Y/N

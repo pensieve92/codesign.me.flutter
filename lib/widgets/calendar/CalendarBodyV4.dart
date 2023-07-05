@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:me/db/daos/datasource.dart';
+import 'package:me/db/tables/DocTypeGroups.dart';
 import 'package:me/utils/CalendarUtil.dart';
 import 'package:provider/provider.dart';
 import 'package:me/utils/commonUtil.dart';
@@ -46,8 +47,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
         ),
         // 풋터
         Flexible(flex: footFlex, child:
-          StreamBuilder<List<DocTypeGroupData>>(
-
+          StreamBuilder<List<DocTypeGroup>>(
             // TODO 조회 확인 테스트
             stream: GetIt.I<LocalDataBase>().docTypeDao.watchDocTypeGroup("1"),
             builder: (context, snapshot) {

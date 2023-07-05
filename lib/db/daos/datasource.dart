@@ -5,7 +5,7 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-import 'package:me/db/tables/DocType.dart';
+import 'package:me/db/tables/DocTypeGroups.dart';
 import 'doc_type_dao.dart';
 
 // assuming that your file is called filename.dart. This will give an error at
@@ -16,7 +16,7 @@ part 'generated/datasource.g.dart';
 
 // this annotation tells drift to prepare a database class that uses both of the
 // tables we just defined. We'll see how to use that database class in a moment.
-@DriftDatabase(tables: [DocTypeGroup], daos: [DocTypeDao])
+@DriftDatabase(tables: [DocTypeGroups], daos: [DocTypeDao])
 class LocalDataBase extends _$LocalDataBase {
 
   // we tell the database where to store the data with this constructor
