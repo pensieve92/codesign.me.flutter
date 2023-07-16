@@ -178,6 +178,9 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   /// selectDay
   /// 날짜 선택
   selectDay(day) {
+    // 키보드 포커스 아웃
+    FocusManager.instance.primaryFocus?.unfocus();
+
     setState(() {
       selectedDay = day;
     });

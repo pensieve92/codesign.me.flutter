@@ -65,8 +65,10 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
   @override
   Widget build(BuildContext context) {
     var isDialOpen = ValueNotifier<bool>(false);
-
     return Scaffold(
+      onDrawerChanged: (isOpened) {
+        if(isOpened) FocusManager.instance.primaryFocus?.unfocus();
+      },
       appBar: CalendarHeaderV2(),
       drawer: Drawer(
         backgroundColor: Colors.greenAccent,
