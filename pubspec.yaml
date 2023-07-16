@@ -42,10 +42,13 @@ dependencies:
   get_it: 7.2.0 # 프로젝트 전역으로 의존성 주입 가능하게 하는 플러그인
   dio: 4.0.6 # 네트워크 요청을 가능하게 하는 플러그인
   uuid: 3.0.6 # UUID를 생성하는 플러그인
+  flutter_speed_dial: ^6.2.0 # fab 하위 메뉴 생성 플러그인
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+
+
 
 dev_dependencies:
   flutter_test:

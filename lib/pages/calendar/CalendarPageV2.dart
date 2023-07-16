@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // 스크롤 다룰때 유용
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:drift/drift.dart' hide Column;
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_it/get_it.dart';
 import 'package:me/db/daos/datasource.dart';
 import 'package:me/db/tables/DocTypeGroups.dart';
@@ -13,7 +14,9 @@ import 'package:me/widgets/calendar/CalendarBodyV4.dart';
 import 'package:me/widgets/calendar/CalendarFooterV2.dart';
 import 'package:me/widgets/calendar/CalendarHeaderV2.dart';
 import 'package:provider/provider.dart';
+
 import './dialog/DialogExample.dart';
+
 
 import '../../stores/CalendarStore.dart';
 
@@ -89,8 +92,69 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           ),
         ),
       ),
-      bottomSheet:
-          Container(color: Colors.red, height: 40, child: createFooter()),
+      bottomSheet:BottomAppBar(
+        color: Colors.redAccent,
+        shape: CircularNotchedRectangle(),
+        notchMargin: 5,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 300,
+              child : TextField(
+                style: TextStyle(color: Colors.black),
+                cursorColor: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+          // Container(color: Colors.red, height: 40, child: createFooter()),
+      floatingActionButton:
+      SpeedDial(
+        childrenButtonSize: const Size(70.0, 70.0),
+        animatedIcon: AnimatedIcons.menu_close,
+        visible: true,
+        curve: Curves.bounceIn,
+        backgroundColor: Colors.indigo.shade900,
+        activeBackgroundColor: Colors.indigo.shade900,
+        switchLabelPosition: false,
+        childMargin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        childPadding: const EdgeInsets.symmetric(vertical: 8),
+        overlayColor: Colors.black,
+        overlayOpacity: 0.8,
+        children: [
+          SpeedDialChild(
+              child: const Icon(Icons.settings_sharp, color: Colors.white,),
+              label: "설정",
+              labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                  fontSize: 14.0
+              ),
+              backgroundColor: Colors.indigo.shade900,
+              labelBackgroundColor: Colors.black.withOpacity(0.0),
+              labelShadow: [], // shadow 없애기
+              onTap: (){}
+          ),
+          SpeedDialChild(
+              child: const Icon(Icons.settings_sharp, color: Colors.white,),
+              label: "설정",
+              labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                  fontSize: 14.0
+              ),
+              backgroundColor: Colors.indigo.shade900,
+              labelBackgroundColor: Colors.black.withOpacity(0.0),
+              foregroundColor: Colors.black.withOpacity(0.0),
+              labelShadow: [],
+              onTap: (){}
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
@@ -119,28 +183,20 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
                         Icons.done_outline,
                         size: 30,
                       ),
-                      onPressed: () async =>  {
+                      onPressed: () async => {
                         print('save button'),
                         // TODO 저장로직 개발
                         // TODO SQLite 추가하기
-                        await GetIt.I<LocalDataBase>().docTypeDao.createDocTypeGroup(
-                            DocTypeGroupsCompanion(
+                        await GetIt.I<LocalDataBase>()
+                            .docTypeDao
+                            .createDocTypeGroup(DocTypeGroupsCompanion(
                                 typeGroupId: Value('2'),
                                 typeGroupNm: Value('BASE2'),
-                                useYn: Value('N')
-                            )
-                        ),
-
+                                useYn: Value('N'))),
                       },
                     )
-                  // 키보드가 들어간 경우, Dialog 띄우기
+                  // 키보드가 들어간 경우, Dialog 띄우기 >> speedDial로 변경
                   : DialogExample()
-              // IconButton(
-              //   onPressed: () => {
-              //     print('open dialog button'),
-              //   },
-              //   icon: Icon(size: 30, Icons.add_box_rounded)
-              // )
               )),
       controller: textEditingController,
     );
