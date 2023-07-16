@@ -113,7 +113,6 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           ],
         ),
       ),
-          // Container(color: Colors.red, height: 40, child: createFooter()),
       floatingActionButton:
       SpeedDial(
         childrenButtonSize: const Size(70.0, 70.0),
@@ -191,47 +190,4 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
     );
   }
 
-  // createFooter
-  // 입력 input 영역
-  Widget createFooter() {
-    var textEditingController = TextEditingController();
-
-    return TextField(
-      style: TextStyle(color: Colors.black),
-      cursorColor: Colors.blue,
-      expands: true,
-      minLines: null,
-      maxLines: null,
-      onTap: () => {},
-      decoration: InputDecoration(
-          filled: true,
-          suffixIcon: ElevatedButton(
-              onPressed: () => {},
-              child: flagKeyBoard
-                  ?
-                  // 키보드가 올라온 경우, 저장
-                  IconButton(
-                      alignment: Alignment.topLeft,
-                      icon: Icon(
-                        Icons.done_outline,
-                        size: 30,
-                      ),
-                      onPressed: () async => {
-                        print('save button'),
-                        // TODO 저장로직 개발
-                        // TODO SQLite 추가하기
-                        await GetIt.I<LocalDataBase>()
-                            .docTypeDao
-                            .createDocTypeGroup(DocTypeGroupsCompanion(
-                                typeGroupId: Value('2'),
-                                typeGroupNm: Value('BASE2'),
-                                useYn: Value('N'))),
-                      },
-                    )
-                  // 키보드가 들어간 경우, Dialog 띄우기 >> speedDial로 변경
-                  : DialogExample()
-              )),
-      controller: textEditingController,
-    );
-  }
 }
