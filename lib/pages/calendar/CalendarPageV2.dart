@@ -64,6 +64,8 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
 
   @override
   Widget build(BuildContext context) {
+    var isDialOpen = ValueNotifier<bool>(false);
+
     return Scaffold(
       appBar: CalendarHeaderV2(),
       drawer: Drawer(
@@ -105,6 +107,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
               child : TextField(
                 style: TextStyle(color: Colors.black),
                 cursorColor: Colors.blue,
+                controller: _docContentEditController,
               ),
             ),
           ],
@@ -114,7 +117,37 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
       floatingActionButton:
       SpeedDial(
         childrenButtonSize: const Size(70.0, 70.0),
-        animatedIcon: AnimatedIcons.menu_close,
+        icon: flagKeyBoard ? Icons.check : Icons.add,
+        activeIcon: Icons.close,
+        openCloseDial: isDialOpen,
+        onPress: () async {
+          print('onPress');
+          if(flagKeyBoard){
+            print('TODO save');
+            // TODO 저장로직 개발
+            // TODO SQLite 추가하기
+            // TODO 저장할 테이블 만들기
+            var text = _docContentEditController.text;
+            print(text);
+            // await GetIt.I<LocalDataBase>()
+            //     .docTypeDaoㅡ
+            //     .createDocTypeGroup(
+            //       DocTypeGroupsCompanion(
+            //         typeGroupId: Value('2'),
+            //         typeGroupNm: Value('BASE2'),
+            //         useYn: Value('N')
+            //       )
+            //     );
+          }else{
+            isDialOpen.value = !isDialOpen.value;
+          }
+        },
+        onOpen: (){
+          print('onOpen');
+        },
+        onClose: (){
+          print('onClose');
+        },
         visible: true,
         curve: Curves.bounceIn,
         backgroundColor: Colors.indigo.shade900,
@@ -126,8 +159,8 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
         overlayOpacity: 0.8,
         children: [
           SpeedDialChild(
-              child: const Icon(Icons.settings_sharp, color: Colors.white,),
-              label: "설정",
+              child: const Icon(Icons.check, color: Colors.white,),
+              label: "일정",
               labelStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
@@ -140,7 +173,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           ),
           SpeedDialChild(
               child: const Icon(Icons.settings_sharp, color: Colors.white,),
-              label: "설정",
+              label: "TODO",
               labelStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
