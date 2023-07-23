@@ -10,27 +10,48 @@ import 'package:me/utils/commonUtil.dart';
 import '../../stores/CalendarStoreV2.dart';
 
 class CalendarBodyV4 extends StatefulWidget {
-  const CalendarBodyV4({Key? key}) : super(key: key);
+  final int dragCount;
+  CalendarBodyV4({Key? key, required this.dragCount }) : super(key: key);
 
   @override
   State<CalendarBodyV4> createState() => _CalendarBodyV4();
 }
 
 class _CalendarBodyV4 extends State<CalendarBodyV4> {
+
   var toggleFooter = false;
   var flagKeyBoard = false;
 
   // 전체: 24
-  // TODO 캘린더 아래 상세내역 보는 부분 필요
   var headFlex = 1;
-  var bodyFlex = 12;
-  var footFlex = 11;
+  var bodyFlex = 22;
+  var footFlex = 1;
 
   // 선택된 날
   DateTime selectedDay = CalendarUtil.getToday();
 
   @override
   Widget build(BuildContext context) {
+    print('widget.dragCount : ${widget.dragCount}');
+
+    setState(() {
+      if(widget.dragCount == -1){
+        // 달력 100%
+        headFlex = 1;
+        bodyFlex = 19;
+        footFlex = 4;
+      } else if(widget.dragCount == 0) {
+        // 달력, 리스트 50%
+        bodyFlex = 8;
+        footFlex = 15;
+      } else if(widget.dragCount == 1) {
+        // 달력 1줄만, 나머지 리스트 100%
+        bodyFlex = 3;
+        footFlex = 20;
+      }
+    });
+
+
     var store = context.watch<CalendarStoreV2>();
     DateTime thisMonth = store.thisMonth;
 
@@ -43,14 +64,16 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
         // 바디
         Flexible(
           flex: bodyFlex,
-          child: createBody(calendar),
+          child: createBody(calendar)
         ),
         // 풋터
-        Flexible(flex: footFlex, child:
-          StreamBuilder<List<DocTypeGroup>>(
+        Flexible(
+          flex: footFlex,
+          child: StreamBuilder<List<DocTypeGroup>>(
             // TODO 조회 확인 테스트
             stream: GetIt.I<LocalDataBase>().docTypeDao.watchDocTypeGroup("1"),
             builder: (context, snapshot) {
+              // },
               if(snapshot.hasData){
                 print('result : ${snapshot.data}');
               }else{
@@ -64,6 +87,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
       ],
     );
   }
+
 
   /// createHeader
   /// 캘린더 Header 영역
@@ -145,35 +169,6 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
           .toList(),
     );
   }
-
-  /// createFooter
-  /// 입력 input 영역
-  // Container testToggleFooter() {
-  //   return Container(
-  //     color: Colors.yellowAccent,
-  //     child: IconButton(
-  //       onPressed: () => {toggleFooterRatio()},
-  //       icon: Icon(Icons.add),
-  //     ),
-  //   );
-  // }
-
-  // TODO
-  /// toggleCalendarRatio
-  /// body, footer 영역 확대/축소
-  // toggleFooterRatio() {
-  //   setState(() {
-  //     if (toggleFooter == false) {
-  //       bodyFlex = 11;
-  //       footFlex = 12;
-  //     } else {
-  //       bodyFlex = 21;
-  //       footFlex = 2;
-  //     }
-  //
-  //     toggleFooter = !toggleFooter;
-  //   });
-  // }
 
   /// selectDay
   /// 날짜 선택

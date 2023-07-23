@@ -17,7 +17,6 @@ import 'package:provider/provider.dart';
 
 import './dialog/DialogExample.dart';
 
-
 import '../../stores/CalendarStore.dart';
 
 class CalendarPageV2 extends StatefulWidget {
@@ -30,6 +29,14 @@ class CalendarPageV2 extends StatefulWidget {
 class _CalendarPageV2State extends State<CalendarPageV2> {
   var gridCellRatio = 1 / 2; // 가로 제로 비율
   final _docContentEditController = TextEditingController();
+
+  // Drag Up, Down
+  int dragCount = 0; // -1: calendar full size, 리스트 제로, 0: default, 1: 리스트 full
+  String dragDirection = '';
+  double startDXPoint = 50.0;
+  double startDYPoint = 50.0;
+  double dXPoint = 0.0;
+  double dYPoint = 0.0;
 
   // keyboard show/hide listener
   late StreamSubscription<bool> keyboardSubscription;
@@ -67,7 +74,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
     var isDialOpen = ValueNotifier<bool>(false);
     return Scaffold(
       onDrawerChanged: (isOpened) {
-        if(isOpened) FocusManager.instance.primaryFocus?.unfocus();
+        if (isOpened) FocusManager.instance.primaryFocus?.unfocus();
       },
       appBar: CalendarHeaderV2(),
       drawer: Drawer(
@@ -78,25 +85,31 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           child: Text("drawer"),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height,
-          ),
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(child: CalendarBodyV4())
-                // CONTENT HERE
-              ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.deferToChild,
+        onVerticalDragStart: handleVerticalDragStart,
+        onVerticalDragUpdate: handleVerticalDragUpdate,
+        onVerticalDragEnd: handleVerticalDragEnd,
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.of(context).size.width,
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(child: CalendarBodyV4(dragCount: dragCount))
+                  // CONTENT HERE
+                ],
+              ),
             ),
           ),
         ),
       ),
-      bottomSheet:BottomAppBar(
+      bottomSheet: BottomAppBar(
         color: Colors.redAccent,
         shape: CircularNotchedRectangle(),
         notchMargin: 5,
@@ -106,7 +119,7 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           children: [
             Container(
               width: 300,
-              child : TextField(
+              child: TextField(
                 style: TextStyle(color: Colors.black),
                 cursorColor: Colors.blue,
                 controller: _docContentEditController,
@@ -115,15 +128,14 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
           ],
         ),
       ),
-      floatingActionButton:
-      SpeedDial(
+      floatingActionButton: SpeedDial(
         childrenButtonSize: const Size(70.0, 70.0),
         icon: flagKeyBoard ? Icons.check : Icons.add,
         activeIcon: Icons.close,
         openCloseDial: isDialOpen,
         onPress: () async {
           print('onPress');
-          if(flagKeyBoard){
+          if (flagKeyBoard) {
             print('TODO save');
             // TODO 저장로직 개발
             // TODO SQLite 추가하기
@@ -139,14 +151,14 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
             //         useYn: Value('N')
             //       )
             //     );
-          }else{
+          } else {
             isDialOpen.value = !isDialOpen.value;
           }
         },
-        onOpen: (){
+        onOpen: () {
           print('onOpen');
         },
-        onClose: (){
+        onClose: () {
           print('onClose');
         },
         visible: true,
@@ -160,36 +172,73 @@ class _CalendarPageV2State extends State<CalendarPageV2> {
         overlayOpacity: 0.8,
         children: [
           SpeedDialChild(
-              child: const Icon(Icons.check, color: Colors.white,),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
               label: "일정",
               labelStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
-                  fontSize: 14.0
-              ),
+                  fontSize: 14.0),
               backgroundColor: Colors.indigo.shade900,
               labelBackgroundColor: Colors.black.withOpacity(0.0),
-              labelShadow: [], // shadow 없애기
-              onTap: (){}
-          ),
+              labelShadow: [],
+              // shadow 없애기
+              onTap: () {}),
           SpeedDialChild(
-              child: const Icon(Icons.settings_sharp, color: Colors.white,),
+              child: const Icon(
+                Icons.settings_sharp,
+                color: Colors.white,
+              ),
               label: "TODO",
               labelStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
-                  fontSize: 14.0
-              ),
+                  fontSize: 14.0),
               backgroundColor: Colors.indigo.shade900,
               labelBackgroundColor: Colors.black.withOpacity(0.0),
               foregroundColor: Colors.black.withOpacity(0.0),
               labelShadow: [],
-              onTap: (){}
-          ),
+              onTap: () {}),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
+  /// dragCount 변경
+  /// -1: calendar full size, 리스트 제로,
+  ///  0: default,
+  ///  1: 리스트 full
+  void handleVerticalDragEnd(DragEndDetails details) {
+    setState(() {
+      if (dYPoint - startDYPoint == 0.0) {
+        // print('drag zero');
+      } else if (dYPoint - startDYPoint > 0.0) {
+        print('drag down');
+        if (dragCount > -1) dragCount--;
+      } else {
+        print('drag up');
+        if (dragCount < 1) dragCount++;
+      }
+    });
+    print('dragCount: $dragCount');
+  }
+
+  void handleVerticalDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      dragDirection = "VERTICAL UPDATING";
+      dXPoint = details.globalPosition.dx.floorToDouble();
+      dYPoint = details.globalPosition.dy.floorToDouble();
+    });
+  }
+
+  void handleVerticalDragStart(DragStartDetails details) {
+    setState(() {
+      dragDirection = "VERTICAL";
+      startDXPoint = details.globalPosition.dx.floorToDouble();
+      startDYPoint = details.globalPosition.dy.floorToDouble();
+    });
+  }
 }
