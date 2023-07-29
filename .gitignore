@@ -43,7 +43,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-.env
-.env2
 *.env
 .env.g.dart
