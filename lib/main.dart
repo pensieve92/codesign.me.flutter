@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:me/stores/CalendarStoreV2.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,10 @@ import 'db/daos/datasource.dart';
 
 
 void main() async {
-   final database = LocalDataBase();
+  await dotenv.load(fileName: ".env");
 
-   GetIt.I.registerSingleton(database);
-
-
-
+  final database = LocalDataBase();
+  GetIt.I.registerSingleton(database);
 
   runApp(GestureDetector(
     onTap: () => {FocusManager.instance.primaryFocus?.unfocus()},
