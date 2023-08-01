@@ -13,15 +13,9 @@ class CalendarHeaderV2 extends StatelessWidget implements PreferredSizeWidget {
     DateTime thisMonth =  store.thisMonth;
 
     return AppBar(
-      // leading: IconButton(
-      //   onPressed: () {
-      //     print('click menu icon');
-      //   },
-      //   icon: Icon(Icons.menu_rounded),
-      // ),
       title: ElevatedButton(
         onPressed: () {
-          print('show modal');
+          print('show modal header2');
         },
         style: ElevatedButton.styleFrom(
           fixedSize: Size(100, 45),
