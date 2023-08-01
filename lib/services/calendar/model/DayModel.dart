@@ -13,6 +13,8 @@ class DayModel {
   late WeekdayModel weekday; // 요일
   late List<DocumentModel> docs; // doc 리스트
   late bool isCurMonth; // 현재월여부
+  late String dateName; // 공휴일 명
+  late String isHolyDay; // 공휴일 여부
 
   /// 생성자
   DayModel(DateTime dateTime) : dateTime = DateTime.now() {
@@ -23,6 +25,8 @@ class DayModel {
     weekday = WeekdayModel(dateTime.weekday);
     isCurMonth = DateTime.now().month == dateTime.month;
     docs = <DocumentModel>[];
+    dateName = '';
+    isHolyDay = '';
 
     // TODO 생성자를 만들때 docs를 초기화해서 넣어 줘야할듯;
     // docs 조회하는 method 분리해서 넣어주기?
@@ -93,7 +97,9 @@ class DayModel {
          day = json['day'] ?? '',
          weekday = json['weekday'] ?? '',
          isCurMonth = json['isCurMonth'] ?? '',
-         docs = json['docs'] ?? ''
+         docs = json['docs'] ?? '',
+         dateName = json['dateName'] ?? '',
+         isHolyDay = json['isHolyDay'] ?? ''
   ;
 
   // Day to Json
@@ -106,6 +112,8 @@ class DayModel {
       'weekday' : weekday,
       'isCurMonth' : isCurMonth,
       'docs' : docs,
+      'dateName': dateName,
+      'isHolyDay': isHolyDay,
     };
   }
 

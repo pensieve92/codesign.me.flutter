@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
-import 'package:me/db/daos/datasource.dart';
-import 'package:me/db/tables/DocTypeGroups.dart';
 import 'package:me/utils/CalendarUtil.dart';
 import 'package:provider/provider.dart';
-import 'package:me/utils/commonUtil.dart';
 
+import '../../api/SpcdeInfoService.dart';
 import '../../stores/CalendarStoreV2.dart';
 
 class CalendarBodyV4 extends StatefulWidget {
@@ -26,6 +22,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   var headFlex = 1;
   var bodyFlex = 22;
   var footFlex = 1;
+  var curDragCount = 0;
 
   // 선택된 날
   DateTime selectedDay = CalendarUtil.getToday();
@@ -35,19 +32,23 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
     print('widget.dragCount : ${widget.dragCount}');
 
     setState(() {
-      if(widget.dragCount == -1){
-        // 달력 100%
-        headFlex = 1;
-        bodyFlex = 19;
-        footFlex = 4;
-      } else if(widget.dragCount == 0) {
-        // 달력, 리스트 50%
-        bodyFlex = 8;
-        footFlex = 15;
-      } else if(widget.dragCount == 1) {
-        // 달력 1줄만, 나머지 리스트 100%
-        bodyFlex = 3;
-        footFlex = 20;
+      if(widget.dragCount != curDragCount){
+        if(widget.dragCount == -1){
+          // 달력 100%
+          // 달력 100%
+          headFlex = 1;
+          bodyFlex = 19;
+          footFlex = 4;
+        } else if(widget.dragCount == 0) {
+          // 달력, 리스트 50%
+          bodyFlex = 8;
+          footFlex = 15;
+        } else if(widget.dragCount == 1) {
+          // 달력 1줄만, 나머지 리스트 100%
+          bodyFlex = 3;
+          footFlex = 20;
+        }
+        curDragCount = widget.dragCount;
       }
     });
 
@@ -69,20 +70,23 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
         // 풋터
         Flexible(
           flex: footFlex,
-          child: StreamBuilder<List<DocTypeGroup>>(
-            // TODO 조회 확인 테스트
-            stream: GetIt.I<LocalDataBase>().docTypeDao.watchDocTypeGroup("1"),
-            builder: (context, snapshot) {
-              // },
-              if(snapshot.hasData){
-                print('result : ${snapshot.data}');
-              }else{
-                print('result : no Data');
-              }
+          child: Container(color: Colors.orange),
 
-              return Container(color: Colors.orange,);
-            }
-          ),
+          // child: StreamBuilder<List<DocTypeGroup>>(
+          //   // TODO 조회 확인 테스트
+          //   stream: GetIt.I<LocalDataBase>().docTypeDao.watchDocTypeGroup("1"),
+          //   builder: (context, snapshot) {
+          //     // },
+          //     if(snapshot.hasData){
+          //       print('result : ${snapshot.data}');
+          //     }else{
+          //       print('여기라고??');
+          //       print('result : no Data');
+          //     }
+          //
+          //     return Container(color: Colors.orange,);
+          //   }
+          // ),
         ),
       ],
     );
@@ -114,12 +118,35 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
       ],
     );
   }
+  // TODO Future<dynamic> 리턴타입을 다시정한다??
+  Future<dynamic> getHoliday(thisMonth) async {
+
+    // SpcdeInfoService().getSpcdeInfo(type: GET_HOLI_DE_INFO, year: 2023, month: 09);
+
+    var jsonData = await SpcdeInfoService().getSpcdeInfo(type: GET_HOLI_DE_INFO, year: 2023, month: 5);
+
+    // // TODO 공휴일 정보 가져오기
+    // var data = await Dio().get(sampleUrl);
+    // final xml2jsonData = Xml2Json()..parse(data.toString());
+    // final jsonString = xml2jsonData.toParker(); // string
+    // print('jsonString : $jsonString');
+    // final jsonData = jsonDecode(jsonString);
+    //
+    // print('jsonData : ${jsonData['response']}');
+    // print('jsonData : ${jsonData['response']['header']}');
+    // print('jsonData : ${jsonData['response']['body']['items']['item']}');
+
+    // TODO 위젯인데 JSON DATA를 넣어서 snapshot에서 false를 반환하는듯..
+    return jsonData;
+  }
 
   /// createBody
   /// 캘린더 Body 영역
   Column createBody(List<DateTime> calendar) {
     var store = context.watch<CalendarStoreV2>();
     DateTime thisMonth = store.thisMonth;
+
+
 
     // 42개를 7일씩 6주로 끊기
     const daysOfWeek = 7;
@@ -137,6 +164,7 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
                       .map(
                         (day) => Expanded(
                           child: GestureDetector(
+                            behavior: HitTestBehavior.deferToChild,
                             onTap: () => {selectDay(day)},
                             child: Container(
                               decoration: selectedDayDecoration(day),
@@ -173,6 +201,9 @@ class _CalendarBodyV4 extends State<CalendarBodyV4> {
   /// selectDay
   /// 날짜 선택
   selectDay(day) {
+    print('selectDay : $day');
+    // TODO day 에 해당하는 TODO, 일정 정보 가져오기
+
     // 키보드 포커스 아웃
     FocusManager.instance.primaryFocus?.unfocus();
 
