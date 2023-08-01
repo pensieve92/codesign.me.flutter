@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constrants/calendar/CalendarConstant.dart';
+import '../constants/calendar/CalendarConstant.dart';
 
 class CalendarUtil {
 
