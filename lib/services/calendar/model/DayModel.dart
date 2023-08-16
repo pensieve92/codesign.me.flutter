@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:me/services/calendar/model/DocumentModel.dart';
 import 'package:me/services/calendar/model/WeekdayModel.dart';
-import 'package:me/stores/CalendarStore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DayModel {

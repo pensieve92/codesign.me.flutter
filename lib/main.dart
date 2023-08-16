@@ -4,10 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:me/stores/CalendarStoreV2.dart';
 import 'package:provider/provider.dart';
 
-import 'package:me/pages/calendar/CalendarPage.dart';
 import 'package:me/pages/calendar/CalendarPageV2.dart';
 
-import 'package:me/stores/CalendarStore.dart';
 
 import 'db/daos/datasource.dart';
 
@@ -38,9 +36,9 @@ void main() async {
         // "/": (context) => ChangeNotifierProvider(create: (context) => CalendarStore(), child: CalendarPage()),
         "/calendar": (context) => MultiProvider(
             providers: [
-              ChangeNotifierProvider(create: (_) => CalendarStore())
+              ChangeNotifierProvider(create: (_) => CalendarStoreV2())
             ],
-            child: CalendarPage()),
+            child: CalendarPageV2()),
       },
     ),
   ));
